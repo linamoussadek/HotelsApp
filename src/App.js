@@ -4,22 +4,27 @@ import NavBar from "./NavBar";
 import HomeImage from "./HomeImage";
 import SearchBox from "./SearchBox";
 import ResultsGrid from "./ResultsGrid"
+import {ThemeProvider} from "@mui/material";
+import {createTheme} from "@mui/system";
+import Employee from './Employee'
+import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
+import Home from "./Home";
 
 function App() {
-  return (
-    <div className="App">
-      <NavBar/>
-        <div className="container">
-            <div className="home-image">
-                <HomeImage />
+    return (
+        <Router>
+            <div className="App">
+                <NavBar/>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/Employee" element={<Employee />} />
+                </Routes>
             </div>
-            <div className="search-box">
-                <SearchBox />
-            </div>
-        </div>
-        <ResultsGrid/>
-    </div>
-  );
+        </Router>
+    );
 }
 
 export default App;
+
+

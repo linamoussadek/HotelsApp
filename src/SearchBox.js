@@ -241,8 +241,6 @@ function InputSlider() {
     );
 }
 
-
-
 function ColumnsGrid() {
     return (
         <Box sx={{ flexGrow: 1 }}>

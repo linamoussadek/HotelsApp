@@ -14,9 +14,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import {Link} from "react-router-dom";
 
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact'];
+const navItems = ['Employee Portal'];
 
 function DrawerAppBar(props) {
     const { window } = props;
@@ -70,7 +71,7 @@ function DrawerAppBar(props) {
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                         {navItems.map((item) => (
                             <Button key={item} sx={{ color: '#fff' }}>
-                                {item}
+                                <Link to="/Employee">{item}</Link>
                             </Button>
                         ))}
                     </Box>
@@ -93,12 +94,6 @@ function DrawerAppBar(props) {
                     {drawer}
                 </Drawer>
             </Box>
-            {/*<Box component="main" sx={{ p: 3 }}>*/}
-            {/*    <Toolbar />*/}
-            {/*    <Typography>*/}
-            {/*        Text here*/}
-            {/*    </Typography>*/}
-            {/*</Box>*/}
         </Box>
     );
 }
