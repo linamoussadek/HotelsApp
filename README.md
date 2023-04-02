@@ -1,6 +1,6 @@
 # HotelsApp
 
-An e-booking app for (fictional) hotels, created with React and managed by SQL. 
+An e-booking app for (fictional) hotels, created with React, Express, Node, and PostgreSQL. 
 
 Steps to run: 
 
