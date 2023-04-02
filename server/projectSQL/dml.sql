@@ -657,6 +657,24 @@ insert into Room (roomNo, hotelID, pricePerDay, capacity, roomView, extendable) 
     (4, 40, 300.0, 5, 'Mountain View', true),
     (5, 40, 400.0, 6, 'Sea View', false);
 
+-- Extra rooms to vary hotel sizes: 
+insert into Room (roomNo, hotelID, pricePerDay, capacity, roomView, extendable) values 
+    (6, 1, 300.0, 2, 'Mountain View', true),
+    (7, 1, 275.0, 3, 'Sea View', false),
+    (8, 1, 350.0, 4, 'Mountain View', true),
+    (9, 1, 250.0, 5, 'Sea View', false),
+    (10, 1, 300.0, 6, 'Mountain View', true),
+    (11, 1, 320.0, 2, 'Mountain View', true),
+    (12, 1, 295.0, 3, 'Sea View', false),
+    (13, 1, 320.0, 4, 'Mountain View', true),
+    (14, 1, 290.0, 5, 'Sea View', false),
+    (15, 1, 310.0, 6, 'Mountain View', true),
+    (6, 2, 310.0, 3, 'Sea View', false),
+    (7, 2, 355.0, 4, 'Mountain View', true),
+    (8, 2, 395.0, 5, 'Sea View', false),
+    (9, 2, 310.0, 2, 'Mountain View', true),
+    (10, 2, 295.5, 6, 'Sea View', false);
+
 -- Amenities for each room
 insert into Amenity (roomNo, hotelID, amenity) values
     (2, 1, 'TV'),

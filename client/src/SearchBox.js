@@ -2,7 +2,6 @@ import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {styled} from "@mui/material/styles";
@@ -37,27 +36,43 @@ const Input = styled(MuiInput)`
 
 
 
-function BasicSelectHotelBranch() {
-    const [hotelBranch, setHotelBranch] = React.useState('');
+function BasicSelectHotelChain() {
+    const [hotelChain, setHotelChain] = React.useState('');
 
     const handleChange = (event) => {
-        setHotelBranch(event.target.value);
+        setHotelChain(event.target.value);
     };
+
+    const [hotelChains, setHotelChains] = React.useState([]);
+    const getHotelChains = async () => {
+        try {
+          const response = await fetch("http://localhost:3001/hotelChains");
+          const jsonData = await response.json();
+    
+          setHotelChains(jsonData);
+        } catch (err) {
+          console.error(err.message);
+        }
+    };
+    React.useEffect(() => {
+        getHotelChains();
+      }, []);
+    // console.log(hotelChains)
 
     return (
         <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Hotel branch</InputLabel>
+                <InputLabel id="demo-simple-select-label">Hotel Chain</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={hotelBranch}
-                    label="Hotel branch"
+                    value={hotelChain}
+                    label="Hotel Chain"
                     onChange={handleChange}
                 >
-                    <MenuItem value={"Le Ritz"}>Le Ritz</MenuItem>
-                    <MenuItem value={"Holiday Inn"}>Holiday Inn</MenuItem>
-                    <MenuItem value={"Sofitel"}>Sofitel</MenuItem>
+                    {hotelChains.map(chain => (
+                        <MenuItem value={chain.chainname}>{chain.chainname}</MenuItem>
+                    ))}
                 </Select>
             </FormControl>
         </Box>
@@ -71,6 +86,22 @@ function BasicSelectCountry() {
         setCountry(event.target.value);
     };
 
+    const [countries, setCountries] = React.useState([]);
+    const getCountries = async () => {
+        try {
+          const response = await fetch("http://localhost:3001/countries");
+          const jsonData = await response.json();
+    
+          setCountries(jsonData);
+        } catch (err) {
+          console.error(err.message);
+        }
+    };
+    React.useEffect(() => {
+        getCountries();
+      }, []);
+    // console.log(countries)
+
     return (
         <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
@@ -82,9 +113,9 @@ function BasicSelectCountry() {
                     label="Country"
                     onChange={handleChange}
                 >
-                    <MenuItem value={"Canada"}>Canada</MenuItem>
-                    <MenuItem value={"United States"}>United States</MenuItem>
-                    <MenuItem value={"Mexico"}>Mexico</MenuItem>
+                    {countries.map(country => (
+                        <MenuItem value={country.country}>{country.country}</MenuItem>
+                    ))}
                 </Select>
             </FormControl>
         </Box>
@@ -98,23 +129,36 @@ function BasicSelectNoOfStars() {
         setnoOfStars(event.target.value);
     };
 
+    const [hotelRatings, sethotelRatings] = React.useState([]);
+    const gethotelRatings = async () => {
+        try {
+          const response = await fetch("http://localhost:3001/hotelRatings");
+          const jsonData = await response.json();
+    
+          sethotelRatings(jsonData);
+        } catch (err) {
+          console.error(err.message);
+        }
+    };
+    React.useEffect(() => {
+        gethotelRatings();
+      }, []);
+    // console.log(hotelRatings)
+
     return (
         <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Hotel Stars</InputLabel>
+                <InputLabel id="demo-simple-select-label">Star Rating</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={noOfStars}
-                    label="Number of stars"
                     label="noOfStars"
                     onChange={handleChange}
                 >
-                    <MenuItem value={1}>1</MenuItem>
-                    <MenuItem value={2}>2</MenuItem>
-                    <MenuItem value={3}>3</MenuItem>
-                    <MenuItem value={4}>4</MenuItem>
-                    <MenuItem value={5}>5+</MenuItem>
+                    {hotelRatings.map(hotelRating => (
+                        <MenuItem value={hotelRating.rating}>{hotelRating.rating}</MenuItem>
+                    ))}
                 </Select>
             </FormControl>
         </Box>
@@ -128,10 +172,26 @@ function BasicSelectRoomCapacity() {
         setRoomCapacity(event.target.value);
     };
 
+    const [roomCapacities, setRoomCapacities] = React.useState([]);
+    const getroomCapacities = async () => {
+        try {
+          const response = await fetch("http://localhost:3001/roomCapacities");
+          const jsonData = await response.json();
+    
+          setRoomCapacities(jsonData);
+        } catch (err) {
+          console.error(err.message);
+        }
+    };
+    React.useEffect(() => {
+        getroomCapacities();
+      }, []);
+    // console.log(roomCapacities)
+
     return (
         <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Room capacity</InputLabel>
+                <InputLabel id="demo-simple-select-label">Room Capacity</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -139,10 +199,9 @@ function BasicSelectRoomCapacity() {
                     label="Room Capacity"
                     onChange={handleChange}
                 >
-                    <MenuItem value={1}>1</MenuItem>
-                    <MenuItem value={2}>2</MenuItem>
-                    <MenuItem value={3}>3</MenuItem>
-                    <MenuItem value={4}>4+</MenuItem>
+                    {roomCapacities.map(roomCapacity => (
+                        <MenuItem value={roomCapacity.capacity}>{roomCapacity.capacity}</MenuItem>
+                    ))}
                 </Select>
             </FormControl>
         </Box>
@@ -162,11 +221,27 @@ function BasicDateRangePicker() {
 }
 
 function BasicSelectHotelSize() {
-    const [hotelSize, setHotelSize] = React.useState('');
+    const [hotelSize, setHotelCapacity] = React.useState('');
 
     const handleChange = (event) => {
-        setHotelSize(event.target.value);
+        setHotelCapacity(event.target.value);
     };
+
+    const [hotelCapacities, setHotelCapacities] = React.useState([]);
+    const getHotelCapacities = async () => {
+        try {
+          const response = await fetch("http://localhost:3001/hotelCapacities");
+          const jsonData = await response.json();
+    
+          setHotelCapacities(jsonData);
+        } catch (err) {
+          console.error(err.message);
+        }
+    };
+    React.useEffect(() => {
+        getHotelCapacities();
+      }, []);
+    // console.log(hotelCapacities)
 
     return (
         <Box sx={{ minWidth: 120 }}>
@@ -179,10 +254,9 @@ function BasicSelectHotelSize() {
                     label="Hotel Size"
                     onChange={handleChange}
                 >
-                    <MenuItem value={10}>Up to 10 rooms</MenuItem>
-                    <MenuItem value={50}>Up to 50 rooms</MenuItem>
-                    <MenuItem value={100}>Up to 100 rooms</MenuItem>
-                    <MenuItem value={200}>Up to 200 rooms</MenuItem>
+                    {hotelCapacities.map(hotelCapacity => (
+                        <MenuItem value={hotelCapacity.num_rooms}>{hotelCapacity.num_rooms}</MenuItem>
+                    ))}
                 </Select>
             </FormControl>
         </Box>
@@ -190,7 +264,7 @@ function BasicSelectHotelSize() {
 }
 
 function InputSlider() {
-    const [value, setValue] = React.useState(30);
+    const [value, setValue] = React.useState(300);
 
     const handleSliderChange = (event, newValue) => {
         setValue(newValue);
@@ -200,24 +274,44 @@ function InputSlider() {
         setValue(event.target.value === '' ? '' : Number(event.target.value));
     };
 
+    const [maxPrice, setMaxPrice] = React.useState([]);
+    const getMaxPrice = async () => {
+        try {
+          const response = await fetch("http://localhost:3001/maxRoomPrice");
+          const jsonData = await response.json();
+    
+          setMaxPrice(jsonData);
+        } catch (err) {
+          console.error(err.message);
+        }
+    };
+    React.useEffect(() => {
+        getMaxPrice();
+      }, []);
+    // console.log(maxPrice)
+    const maximumPrice = maxPrice.length == 1 ? maxPrice[0].maxprice : 1000
+
     const handleBlur = () => {
         if (value < 0) {
             setValue(0);
-        } else if (value > 1000) {
-            setValue(1000);
+        } else if (value > maximumPrice) {
+            setValue(maximumPrice);
         }
     };
 
     return (
-        <Box sx={{ width: 470 }}>
+        <Box sx={{ width: 400 }}>
             <Typography id="input-slider" gutterBottom>
-                Budget per night, per room
+                Price Per Night
             </Typography>
             <Grid container spacing={2} alignItems="center">
                 <Grid item xs>
                     <Slider
-                        value={typeof value === 'number' ? value : 0}
+                        min={0}
+                        max={maximumPrice}
                         onChange={handleSliderChange}
+                        value={typeof value === 'number' ? value : 0}
+                        step={1}
                         aria-labelledby="input-slider"
                     />
                 </Grid>
@@ -247,7 +341,7 @@ function ColumnsGrid() {
             <Grid container spacing={3} columns={16}>
                 <Grid item xs={4}>
                     <Item>
-                        <BasicSelectHotelBranch/>
+                        <BasicSelectHotelChain/>
                     </Item>
                 </Grid>
                 <Grid item xs={5}>

@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import NavBar from "./NavBar";
 import HomeImage from "./HomeImage";
 import SearchBox from "./SearchBox";
 import ResultsGrid from "./ResultsGrid"

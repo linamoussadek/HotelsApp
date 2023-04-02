@@ -1,13 +1,8 @@
 import React from 'react';
 import './App.css';
 import NavBar from "./NavBar";
-import HomeImage from "./HomeImage";
-import SearchBox from "./SearchBox";
-import ResultsGrid from "./ResultsGrid"
-import {ThemeProvider} from "@mui/material";
-import {createTheme} from "@mui/system";
 import Employee from './Employee'
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Routes, Route } from 'react-router';
 import Home from "./Home";
 
