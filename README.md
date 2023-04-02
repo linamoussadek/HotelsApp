@@ -1,6 +1,6 @@
 # HotelsApp
 
-A sort of e-booking for hotel rooms, created with React and managed by SQL. 
+An e-booking app for (fictional) hotels, created with React and managed by SQL. 
 
 Steps to run: 
 
