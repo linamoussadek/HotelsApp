@@ -3,33 +3,26 @@ const app = express()
 const cors = require('cors')
 const pool = require("./db");
 
-// middleware
+// Middleware
+
+// Allow HTTP requests from other domains i.e localhost 3000 fetches from 3001
+// https://www.stackhawk.com/blog/nodejs-cors-guide-what-it-is-and-how-to-enable-it/
 app.use(cors())
+// Parse JSON payloads
 app.use(express.json())
 
 
-// Routes
+// Routes (Queries)
 
 // Get all hotel chains
+// Ex: http://localhost:3001/hotelchains
 app.get("/hotelchains", async (req, res) => {
-    try {
-      const allHotelChains = await pool.query("select chainName from hotelchain")
-      res.json(allHotelChains.rows)
+  try {
+    const allHotelChains = await pool.query("select chainName from hotelchain")
+    res.json(allHotelChains.rows)
     } catch (err) {
       console.error(err.message)
     }
-});
-// Get hotel chains in certain country
-app.get("/hotelchains/:country", async (req, res) => {
-  try {
-    const { country } = req.params
-    const countryHotels = await pool.query(
-      "select chainName from hotelchain where hotelchain.addressID in (select addressID from address where country = $1)", [country]
-    )
-    res.json(countryHotels.rows)
-  } catch (err) {
-    console.error(err.message)
-  }
 });
 
 
@@ -70,22 +63,63 @@ app.get("/hotelchains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:
   } catch (err) {
     console.error(err.message)
   }
-});
+})
+
+// Get bookings based on employeeID's hotel that are not 'over' yet
+// Ex: http://localhost:3001/employeeBookings/1
+app.get("/employeeBookingsNotOver/:employeeID", async (req, res) => {
+  try {
+    const { employeeID } = req.params
+    console.log(req.params)
+    const query = 
+    `select person.firstName, person.lastName, roomNo, hotelID, startDate, endDate from booking
+    join person on person.ssn = (select ssn from customer where 
+                  customer.customerID = booking.customerID)
+    and booking.hotelID in (select hotelID from worksAt where
+                worksAt.employeeID = $1)
+    and canceled = false
+    and checkedIn = false
+	  and endDate >= current_date;
+    `
+    const hotelBookings = await pool.query(
+      query, [employeeID]
+    )
+    res.json(hotelBookings.rows)
+  } catch (err) {
+    console.error(err.message)
+  }
+})
 
 
-// Can have multiple values in url (for filter) like this? Null if left blank
-// get("/hotels/:hotelID/rooms/:roomID", (req, res) => {
-//   const hotelID = req.params.hotelID || null
-//   const roomID = req.params.roomID || null;
-//   // Query the server with the hotelID and roomID values
+// Get booking history based on employeeID's hotel (cancelled/checked in/expired)
+// Ex: http://localhost:3001/employeeBookings/1
+app.get("/employeeBookingsOver/:employeeID", async (req, res) => {
+  try {
+    const { employeeID } = req.params
+    console.log(req.params)
+    const query = 
+    `select person.firstName, person.lastName, roomNo, hotelID, startDate, endDate from booking
+    join person on person.ssn = (select ssn from customer where 
+                  customer.customerID = booking.customerID)
+    and booking.hotelID in (select hotelID from worksAt where
+                worksAt.employeeID = $1)
+    and (canceled = true
+    or checkedIn = true
+	  or endDate < current_date);
+    `
+    const hotelBookingsHistory = await pool.query(
+      query, [employeeID]
+    )
+    res.json(hotelBookingsHistory.rows)
+  } catch (err) {
+    console.error(err.message)
+  }
+})
 
-    // COALESCE($1, country) --> if country is null, it returns the whole column
-    // Note: '' is not the same as null - maybe check length of criteria - pass null if 0
-// });
-
-// Then call get with the url
 
 
+
+// Port
 
 const port = 3001
 app.listen(port, () => {

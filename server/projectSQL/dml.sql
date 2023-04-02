@@ -141,7 +141,13 @@ insert into Person (ssn, addressID, firstName, lastName) values
     ('100000038', 39, 'Diarmuid', 'Boyle'),
     ('100000039', 40, 'Molly', 'Joyce');
 
-
+-- Customers:
+insert into Customer (ssn, registrationDate) values
+    ('111223333', current_date),
+    ('222334444', current_date),
+    ('333445555', current_date),
+    ('444556666', current_date),
+    ('555667777', current_date);
 
 -- Employees: 
 insert into Employee (ssn, yearlySalary) values
@@ -777,3 +783,10 @@ insert into Damage (roomNo, hotelID, details) values
     (1, 38, 'Worn-out pillows'),
     (1, 39, 'Scratched nightstand'),
     (1, 40, 'Peeling wallpaper');
+
+-- Bookings
+insert into Booking (customerID, roomNo, hotelID, employeeID, 
+    startDate, endDate, canceled, checkedIn) values
+    (1, 1, 1, null, current_date, current_date, false, false),
+    (1, 2, 1, null, current_date, current_date + interval '15 days', false, false);
+

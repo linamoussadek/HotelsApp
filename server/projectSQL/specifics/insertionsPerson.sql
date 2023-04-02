@@ -141,7 +141,13 @@ insert into Person (ssn, addressID, firstName, lastName) values
     ('100000038', 39, 'Diarmuid', 'Boyle'),
     ('100000039', 40, 'Molly', 'Joyce');
 
-
+-- Customers:
+insert into Customer (ssn, registrationDate) values
+    ('111223333', current_date),
+    ('222334444', current_date),
+    ('333445555', current_date),
+    ('444556666', current_date),
+    ('555667777', current_date);
 
 -- Employees: 
 insert into Employee (ssn, yearlySalary) values

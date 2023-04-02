@@ -465,3 +465,9 @@ insert into Damage (roomNo, hotelID, details) values
     (1, 38, 'Worn-out pillows'),
     (1, 39, 'Scratched nightstand'),
     (1, 40, 'Peeling wallpaper');
+
+-- Bookings
+insert into Booking (customerID, roomNo, hotelID, employeeID, 
+    startDate, endDate, canceled, checkedIn) values
+    (1, 1, 1, null, current_date, current_date, false, false),
+    (1, 2, 1, null, current_date, current_date + interval '15 days', false, false);
