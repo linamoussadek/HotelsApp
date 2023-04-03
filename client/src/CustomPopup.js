@@ -24,7 +24,7 @@ const CustomPopup = (props) => {
         >
             <div className={popupStyles.popup}>
                 <h2>{props.title}</h2>
-                <span className={popupStyles.close} onClick={closeHandler}>
+                <span className={popupStyles.close} onClick={closeHandler} style={{cursor: 'pointer'}}>
           &times;
         </span>
                 <div className={popupStyles.content}>{props.children}</div>

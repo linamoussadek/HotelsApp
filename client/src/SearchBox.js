@@ -264,14 +264,14 @@ function BasicSelectHotelSize() {
 }
 
 function InputSlider() {
-    const [value, setValue] = React.useState(300);
+    const [pricePerDay, setPricePerDay] = React.useState(300);
 
     const handleSliderChange = (event, newValue) => {
-        setValue(newValue);
+        setPricePerDay(newValue);
     };
 
     const handleInputChange = (event) => {
-        setValue(event.target.value === '' ? '' : Number(event.target.value));
+        setPricePerDay(event.target.value === '' ? '' : Number(event.target.value));
     };
 
     const [maxPrice, setMaxPrice] = React.useState([]);
@@ -292,10 +292,10 @@ function InputSlider() {
     const maximumPrice = maxPrice.length === 1 ? maxPrice[0].maxprice : 1000
 
     const handleBlur = () => {
-        if (value < 0) {
-            setValue(0);
-        } else if (value > maximumPrice) {
-            setValue(maximumPrice);
+        if (pricePerDay < 0) {
+            setPricePerDay(0);
+        } else if (pricePerDay > maximumPrice) {
+            setPricePerDay(maximumPrice);
         }
     };
 
@@ -310,14 +310,14 @@ function InputSlider() {
                         min={0}
                         max={maximumPrice}
                         onChange={handleSliderChange}
-                        value={typeof value === 'number' ? value : 0}
+                        value={typeof pricePerDay === 'number' ? pricePerDay : 0}
                         step={1}
                         aria-labelledby="input-slider"
                     />
                 </Grid>
                 <Grid item>
                     <Input
-                        value={value}
+                        value={pricePerDay}
                         size="small"
                         onChange={handleInputChange}
                         onBlur={handleBlur}
@@ -382,7 +382,6 @@ function ColumnsGrid() {
 }
 
 export default function MediaCard() {
-    const clickFunc = () => {console.log("Click!")}
     return (
         <Card sx={{ maxWidth: 1500 }}>
             <CardContent>
@@ -392,7 +391,7 @@ export default function MediaCard() {
                 <ColumnsGrid/>
             </CardContent>
             <CardActions>
-                <Button size="small" onClick={clickFunc}>Search</Button>
+                <Button size="small">Search</Button>
             </CardActions>
         </Card>
     );

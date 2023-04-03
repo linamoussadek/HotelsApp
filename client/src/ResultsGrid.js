@@ -93,14 +93,15 @@ function RegisterForm({ onClose }) {
         </div>
     );
 }
-function MediaCard() {
+export default function ResultsGrid() {
     const [visibility, setVisibility] = useState(false);
 
     const popupCloseHandler = (e) => {
         setVisibility(e);
-    };
+    };    
 
-    // Ex: http://localhost:3001/hotelchains/Le Ritz/hotels/Canada/3/5/rooms/4/300/dates/2021-10-30/2021-10-31
+    // Ex default values: 
+    // http://localhost:3001/hotelchains/Le Ritz/hotels/Canada/3/5/rooms/4/300/dates/2021-10-30/2021-10-31
 
     const [rooms, setRooms] = useState([]);
     const getRooms = async () => {
@@ -126,58 +127,44 @@ function MediaCard() {
 
     return (
         <>
-            {rooms.map(room => (
-                <Card key={room.hotelid+""+room.roomNo} sx={{ maxWidth: 345 }}>
-                    <CardMedia
-                        sx={{ height: 140 }}
-                        image={roomViewMap.get(room.roomview)}
-                        title="view picture"
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant="h6" component="div">
-                            {room.hotelname + ", Room " + room.roomno}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {room.roomview} <br></br>
-                            {"Amenities: " + room.amenity} <br></br>
-                            {"Capacity: " + room.capacity + " people"} <br></br>
-                            {"Price per night: $" + room.priceperday} <br></br>
-                            {"Damages: " + room.details}
-                        </Typography>
-                    </CardContent>
-                    <CardActions>
-                        <Button size="small" onClick={(e) => setVisibility(!visibility)}>Book this room</Button>
-                        <CustomPopup
-                            title="BookingPopup"
-                            onClose={popupCloseHandler}
-                            show={visibility}
-                        >
-                            <RegisterForm/>
-                        </CustomPopup>
-                    </CardActions>
-                </Card>
-            ))}
-            </>
+            <Box sx={{ width: '100%', mt: 20, ml:2, mr:2, maxWidth:1500}}>
+                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                    <Grid item xs={3}>
+                        {rooms.map(room => (
+                            <Card key={room.hotelid+""+room.roomNo} sx={{ maxWidth: 345 }}>
+                                <CardMedia
+                                    sx={{ height: 140 }}
+                                    image={roomViewMap.get(room.roomview)}
+                                    title="view picture"
+                                />
+                                <CardContent>
+                                    <Typography gutterBottom variant="h6" component="div">
+                                        {room.hotelname + ", Room " + room.roomno}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {room.roomview} <br></br>
+                                        {"Amenities: " + room.amenity} <br></br>
+                                        {"Capacity: " + room.capacity + " people"} <br></br>
+                                        {"Price per night: $" + room.priceperday} <br></br>
+                                        {"Damages: " + room.details}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small" onClick={(e) => setVisibility(!visibility)}>Book this room</Button>
+                                    <CustomPopup
+                                        title="BookingPopup"
+                                        onClose={popupCloseHandler}
+                                        show={visibility}
+                                    >
+                                        <RegisterForm/>
+                                    </CustomPopup>
+                                </CardActions>
+                            </Card>
+                        ))}
+                    </Grid>
+                </Grid>
+            </Box>
+        </>
     );
 }
 
-export default function RowAndColumnSpacing() {
-    return (
-        <Box sx={{ width: '100%', mt: 20, ml:2, mr:2, maxWidth:1500}}>
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={3}>
-                    <MediaCard/>
-                </Grid>
-                <Grid item xs={3}>
-                    <MediaCard/>
-                </Grid>
-                <Grid item xs={3}>
-                    <MediaCard/>
-                </Grid>
-                <Grid item xs={3}>
-                    <MediaCard/>
-                </Grid>
-            </Grid>
-        </Box>
-    );
-}
