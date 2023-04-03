@@ -149,7 +149,7 @@ create table Booking(
 
 
 
--- Booking index for retrieving Bookings for a specific hotel
+-- Booking index for retrieving Bookings for a specific hotel - i.e employee's hotel
 create index booking_hotel_index on Booking (hotelID);
 
 -- Contact indexes for retrieving contact info of hotels and chains

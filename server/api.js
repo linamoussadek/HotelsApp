@@ -25,10 +25,13 @@ app.get("/hotelChains", async (req, res) => {
     }
 });
 
-// Get all countries
-app.get("/countries", async (req, res) => {
+// Get all countries and number of rooms in each country
+app.get("/countryCapacities", async (req, res) => {
   try {
-    const allCountries = await pool.query("select distinct country from address order by country asc;")
+    const allCountries = await pool.query(
+      `select country, sum(num_available_rooms) from num_available_rooms_in_city
+	      group by country order by country asc;`
+    )
     res.json(allCountries.rows)
     } catch (err) {
       console.error(err.message)
@@ -83,10 +86,14 @@ app.get("/hotelChains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:
     const { chainName, country, size, rating, capacity, pricePerDay, start, end } = req.params
     console.log(req.params)
     const query = 
-    `select hotelname, room.roomNo, pricePerDay, capacity, roomView, amenity, details from room 
+    `select hotelname, chainname, street, city, stateOrProvince, country, contactinfo,
+    room.roomNo, pricePerDay, capacity, extendable, roomView, amenity, details from room 
     join hotel on room.hotelid = hotel.hotelid 
-    join amenity on room.roomNo = amenity.roomNo and room.hotelid = amenity.hotelid 
-    join damage on room.roomNo = amenity.roomNo and room.hotelid = damage.hotelid
+    join address on hotel.addressid = address.addressid
+    join hotelchain on hotel.chainid = hotelchain.chainid
+	  left join hotelcontact on hotel.hotelid = hotelcontact.hotelid
+    left join amenity on room.roomNo = amenity.roomNo and room.hotelid = amenity.hotelid 
+    left join damage on room.roomNo = amenity.roomNo and room.hotelid = damage.hotelid
     where room.hotelID in 
       (select hotelID from hotel where hotel.chainID in 
 		    (select chainID from hotelchain where chainName = coalesce($1, chainName)

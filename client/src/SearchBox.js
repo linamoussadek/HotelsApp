@@ -89,7 +89,7 @@ function BasicSelectCountry() {
     const [countries, setCountries] = React.useState([]);
     const getCountries = async () => {
         try {
-          const response = await fetch("http://localhost:3001/countries");
+          const response = await fetch("http://localhost:3001/countryCapacities");
           const jsonData = await response.json();
     
           setCountries(jsonData);
@@ -114,7 +114,8 @@ function BasicSelectCountry() {
                     onChange={handleChange}
                 >
                     {countries.map(country => (
-                        <MenuItem key={country.country} value={country.country}>{country.country}</MenuItem>
+                        <MenuItem key={country.country} value={country.country}>
+                            {country.country+": "+country.sum+" rooms"}</MenuItem>
                     ))}
                 </Select>
             </FormControl>

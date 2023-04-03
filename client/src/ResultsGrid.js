@@ -100,13 +100,12 @@ export default function ResultsGrid() {
         setVisibility(e);
     };    
 
-    // Ex default values: 
-    // http://localhost:3001/hotelchains/Le Ritz/hotels/Canada/3/5/rooms/4/300/dates/2021-10-30/2021-10-31
+    // Ex default values for rooms route: 
 
     const [rooms, setRooms] = useState([]);
     const getRooms = async () => {
         try {
-          const response = await fetch("http://localhost:3001/hotelChains/Le Ritz/hotels/Canada/3/5/rooms/4/300/dates/2021-10-30/2021-10-31");
+          const response = await fetch("http://localhost:3001/hotelChains/Le Ritz/hotels/Canada/3/5/rooms/4/400/dates/2021-10-30/2021-10-31");
           const jsonData = await response.json();
     
           setRooms(jsonData);
@@ -125,13 +124,61 @@ export default function ResultsGrid() {
     
     // console.log(rooms);
 
+    rooms.forEach(room => {
+        Object.keys(room).forEach((i) => {
+            if (room[i] == null) {
+                room[i] = "None"
+            }
+        });
+    })
+
+    const groupRoomsByHotel = rooms.reduce((hotelNameAccumulator, room) => {
+        const { hotelname, chainname, street, city, stateorprovince, country } = room;
+        if (!hotelNameAccumulator[hotelname]) {
+            hotelNameAccumulator[hotelname] = {
+                address: street+", "+city+", "+stateorprovince+", "+country,
+                chainname: chainname,
+                contactinfo: [],
+                rooms: []
+            }
+        }
+        // Push onto rooms and contactinfo array, will later iterator over for each
+        hotelNameAccumulator[hotelname].rooms.push(room);
+        hotelNameAccumulator[hotelname].contactinfo.push(room.contactinfo);
+        return hotelNameAccumulator;
+      }, {});
+    // console.log(groupRoomsByHotel)
+
+    const roomsByHotel = Object.entries(groupRoomsByHotel)
+    .map(([hotelname, {chainname, address, contactinfo, rooms}]) => ({
+        hotelname,
+        chainname,
+        address,
+        contactinfo,
+        rooms
+      }));
+    // console.log(roomsByHotel)
+
     return (
         <>
-            <Box sx={{ width: '100%', mt: 20, ml:2, mr:2, maxWidth:1500}}>
-                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={3}>
-                        {rooms.map(room => (
-                            <Card key={room.hotelid+""+room.roomNo} sx={{ maxWidth: 345 }}>
+        {roomsByHotel.map(({ hotelname, chainname, address, contactinfo, rooms }) => (
+            <Box key={hotelname+"B"} sx={{ width: '100%', mt: 30, ml:2, mr:2, maxWidth:1500}}>
+                <Typography key={hotelname+"T1"} variant="h5" component="div">
+                    {hotelname+" | "+chainname}
+                    <Typography key={hotelname+"T2"} variant="subtitle1" component="div">
+                        {address}
+                    </Typography>
+                    {/* Want contacts to be unique */}
+                    {[...new Set(contactinfo)].map(info => (
+                        <Typography key={hotelname+info+"T"} gutterBottom variant="subtitle1" component="div">
+                        {info}
+                        </Typography>
+                    ))}
+                </Typography>                
+                <Grid key={hotelname+"G"}  container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} direction="row">
+                    {rooms.map(room => (
+                        <Grid key={hotelname+""+room.roomno+"G"} item xs={3} sm={6} md={4} lg={3}>
+                            <Card key={hotelname+""+room.roomno+"C"} sx={{ maxWidth: 345 }}>
                                 <CardMedia
                                     sx={{ height: 140 }}
                                     image={roomViewMap.get(room.roomview)}
@@ -139,12 +186,13 @@ export default function ResultsGrid() {
                                 />
                                 <CardContent>
                                     <Typography gutterBottom variant="h6" component="div">
-                                        {room.hotelname + ", Room " + room.roomno}
+                                        {"Room " + room.roomno}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {room.roomview} <br></br>
                                         {"Amenities: " + room.amenity} <br></br>
-                                        {"Capacity: " + room.capacity + " people"} <br></br>
+                                        {"Capacity: "+room.capacity+" people"}
+                                        {room.extendable ? ", (Extendable)" : ", (Not Extendable)"}<br></br>
                                         {"Price per night: $" + room.priceperday} <br></br>
                                         {"Damages: " + room.details}
                                     </Typography>
@@ -160,10 +208,11 @@ export default function ResultsGrid() {
                                     </CustomPopup>
                                 </CardActions>
                             </Card>
-                        ))}
-                    </Grid>
+                        </Grid>
+                    ))}
                 </Grid>
             </Box>
+        ))}
         </>
     );
 }
