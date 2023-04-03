@@ -71,7 +71,7 @@ function BasicSelectHotelChain() {
                     onChange={handleChange}
                 >
                     {hotelChains.map(chain => (
-                        <MenuItem value={chain.chainname}>{chain.chainname}</MenuItem>
+                        <MenuItem key={chain.chainname} value={chain.chainname}>{chain.chainname}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
@@ -114,7 +114,7 @@ function BasicSelectCountry() {
                     onChange={handleChange}
                 >
                     {countries.map(country => (
-                        <MenuItem value={country.country}>{country.country}</MenuItem>
+                        <MenuItem key={country.country} value={country.country}>{country.country}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
@@ -157,7 +157,7 @@ function BasicSelectNoOfStars() {
                     onChange={handleChange}
                 >
                     {hotelRatings.map(hotelRating => (
-                        <MenuItem value={hotelRating.rating}>{hotelRating.rating}</MenuItem>
+                        <MenuItem key={hotelRating.rating} value={hotelRating.rating}>{hotelRating.rating}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
@@ -200,7 +200,7 @@ function BasicSelectRoomCapacity() {
                     onChange={handleChange}
                 >
                     {roomCapacities.map(roomCapacity => (
-                        <MenuItem value={roomCapacity.capacity}>{roomCapacity.capacity}</MenuItem>
+                        <MenuItem key={roomCapacity.capacity} value={roomCapacity.capacity}>{roomCapacity.capacity}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
@@ -255,7 +255,7 @@ function BasicSelectHotelSize() {
                     onChange={handleChange}
                 >
                     {hotelCapacities.map(hotelCapacity => (
-                        <MenuItem value={hotelCapacity.num_rooms}>{hotelCapacity.num_rooms}</MenuItem>
+                        <MenuItem key={hotelCapacity.num_rooms} value={hotelCapacity.num_rooms}>{hotelCapacity.num_rooms}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
@@ -289,7 +289,7 @@ function InputSlider() {
         getMaxPrice();
       }, []);
     // console.log(maxPrice)
-    const maximumPrice = maxPrice.length == 1 ? maxPrice[0].maxprice : 1000
+    const maximumPrice = maxPrice.length === 1 ? maxPrice[0].maxprice : 1000
 
     const handleBlur = () => {
         if (value < 0) {
@@ -382,6 +382,7 @@ function ColumnsGrid() {
 }
 
 export default function MediaCard() {
+    const clickFunc = () => {console.log("Click!")}
     return (
         <Card sx={{ maxWidth: 1500 }}>
             <CardContent>
@@ -391,7 +392,7 @@ export default function MediaCard() {
                 <ColumnsGrid/>
             </CardContent>
             <CardActions>
-                <Button size="small">Search</Button>
+                <Button size="small" onClick={clickFunc}>Search</Button>
             </CardActions>
         </Card>
     );

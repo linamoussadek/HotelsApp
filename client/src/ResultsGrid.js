@@ -127,7 +127,7 @@ function MediaCard() {
     return (
         <>
             {rooms.map(room => (
-                <Card sx={{ maxWidth: 345 }}>
+                <Card key={room.hotelid+""+room.roomNo} sx={{ maxWidth: 345 }}>
                     <CardMedia
                         sx={{ height: 140 }}
                         image={roomViewMap.get(room.roomview)}
@@ -148,6 +148,7 @@ function MediaCard() {
                     <CardActions>
                         <Button size="small" onClick={(e) => setVisibility(!visibility)}>Book this room</Button>
                         <CustomPopup
+                            title="BookingPopup"
                             onClose={popupCloseHandler}
                             show={visibility}
                         >
