@@ -71,7 +71,7 @@ app.get("/hotelRatings", async (req, res) => {
 // Get min and max price per day of room
 app.get("/maxRoomPrice", async (req, res) => {
   try {
-    const maxPrice = await db.any("select max(pricePerDay) as maxPrice from room;")
+    const maxPrice = await db.one("select max(pricePerDay) as maxPrice from room;")
     res.json(maxPrice)
     } catch (err) {
       console.error(err.message)
@@ -129,14 +129,15 @@ app.get("/employeeBookingsNotOver/:employeeID", async (req, res) => {
     const { employeeID } = req.params
     console.log(req.params)
     const query = 
-    `select person.firstName, person.lastName, roomNo, hotelID, startDate, endDate from booking
+    `select person.firstName, person.lastName, roomNo, booking.hotelID, hotelname, startDate, endDate from booking
     join person on person.ssn = (select ssn from customer where 
                   customer.customerID = booking.customerID)
-    and booking.hotelID in (select hotelID from worksAt where
-                worksAt.employeeID = $1)
+    join hotel on booking.hotelID = hotel.hotelID
+    where booking.hotelID in (select hotelID from worksAt where
+                worksAt.employeeID = 1)
     and canceled = false
     and checkedIn = false
-	  and endDate >= current_date;
+	  and endDate::date >= current_date;
     `
     const hotelBookings = await db.any(
       query, [employeeID]
@@ -155,14 +156,15 @@ app.get("/employeeBookingsOver/:employeeID", async (req, res) => {
     const { employeeID } = req.params
     console.log(req.params)
     const query = 
-    `select person.firstName, person.lastName, roomNo, hotelID, startDate, endDate from booking
+    `select person.firstName, person.lastName, roomNo, booking.hotelID, hotelname, startDate, endDate from booking
     join person on person.ssn = (select ssn from customer where 
                   customer.customerID = booking.customerID)
-    and booking.hotelID in (select hotelID from worksAt where
-                worksAt.employeeID = $1)
+    join hotel on booking.hotelID = hotel.hotelID
+    where booking.hotelID in (select hotelID from worksAt where
+                worksAt.employeeID = 1)
     and (canceled = true
     or checkedIn = true
-	  or endDate < current_date);
+	  or endDate::date < current_date);
     `
     const hotelBookingsHistory = await db.any(
       query, [employeeID]

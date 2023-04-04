@@ -2,16 +2,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+
 
 function AcceptButton() {
     return (
@@ -29,119 +28,61 @@ function DiscardButton() {
     );
 }
 
-function AlignItemsListPending() {
+
+function BookingsList({endpoint}){
+    const [employeeBookings, setEmployeeBookings] = React.useState([]);
+    
+    const getEmployeeBookings = async () => {
+        try {
+            const response = await fetch(endpoint);
+            const jsonData = await response.json();
+            setEmployeeBookings(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+    React.useEffect(() => {
+        getEmployeeBookings();
+    }, []);
+    console.log(employeeBookings)
+    if(employeeBookings.length === 0) return <div>No bookings at this time</div>
+
     return (
+        <>
         <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper', ml:40 }}>
-            <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                    <Avatar alt="Ali Connor" src="/static/images/avatar/1.jpg" />
-                </ListItemAvatar>
-                <ListItemText
-                    primary="Ali Connors"
-                    secondary={
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                        <React.Fragment>
-                            <Typography
-                                sx={{ display: 'inline' }}
-                                component="span"
-                                variant="body2"
-                                color="text.primary"
-                            >
-                                Room ABC, Hotel XYZ
-                            </Typography>
-                            {" — From DD/MM/YYYY to DD/MM/YYYY"}
-                                <AcceptButton/>
-                                <DiscardButton/>
-                        </React.Fragment>
-                        </div>
-
-                    }
-                />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-            <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                    <Avatar alt="Ali Connor" src="/static/images/avatar/1.jpg" />
-                </ListItemAvatar>
-                <ListItemText
-                    primary="Ali Connors"
-                    secondary={
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <React.Fragment>
-                                <Typography
-                                    sx={{ display: 'inline' }}
-                                    component="span"
-                                    variant="body2"
-                                    color="text.primary"
-                                >
-                                    Room ABC, Hotel XYZ
-                                </Typography>
-                                {" — From DD/MM/YYYY to DD/MM/YYYY"}
-                                <AcceptButton/>
-                                <DiscardButton/>
-                            </React.Fragment>
-                        </div>
-
-                    }
-                />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-            <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                    <Avatar alt="Ali Connor" src="/static/images/avatar/1.jpg" />
-                </ListItemAvatar>
-                <ListItemText
-                    primary="Ali Connors"
-                    secondary={
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <React.Fragment>
-                                <Typography
-                                    sx={{ display: 'inline' }}
-                                    component="span"
-                                    variant="body2"
-                                    color="text.primary"
-                                >
-                                    Room ABC, Hotel XYZ
-                                </Typography>
-                                {" — From DD/MM/YYYY to DD/MM/YYYY"}
-                                <AcceptButton/>
-                                <DiscardButton/>
-                            </React.Fragment>
-                        </div>
-
-                    }
-                />
-            </ListItem>
+            {employeeBookings.map(booking => (
+                <ListItem alignItems="flex-start" key={booking.roomno+""+booking.hotelid+""+booking.startdate+"LI1"}>
+                    <ListItemAvatar>
+                        <Avatar alt="Michael Linason" src="/static/images/avatar/1.jpg" />
+                    </ListItemAvatar>
+                    <ListItemText
+                        disableTypography
+                        primary={booking.firstname + " " + booking.lastname}
+                        secondary={
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <div>{booking.hotelname + ", "}<br></br>{"Room " + booking.roomno}</div>
+                                {"From " + 
+                                new Intl.DateTimeFormat('en-US', { dateStyle: 'full'}).format(new Date(booking.startdate)) + " to "}
+                                <br></br>
+                                {new Intl.DateTimeFormat('en-US', { dateStyle: 'full'}).format(new Date(booking.enddate))}
+                                    <AcceptButton/>
+                                    <DiscardButton/>
+                            </div>
+                        }
+                    />
+                </ListItem>
+            ))}
         </List>
+        </>
     );
 }
 
+function AlignItemsListPending() {
+    return <BookingsList endpoint="http://localhost:3001/employeeBookingsNotOver/1" />;
+}
+
 function AlignItemsListHistory() {
-    return (
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-            <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                    <Avatar alt="Eleanor Smith" src="/static/images/avatar/3.jpg" />
-                </ListItemAvatar>
-                <ListItemText
-                    primary="Eleanor Smith"
-                    secondary={
-                        <React.Fragment>
-                            <Typography
-                                sx={{ display: 'inline' }}
-                                component="span"
-                                variant="body2"
-                                color="text.primary"
-                            >
-                                Room ABC, Hotel XYZ
-                            </Typography>
-                            {' — From DD/MM/YYYY to DD/MM/YYYY'}
-                        </React.Fragment>
-                    }
-                />
-            </ListItem>
-        </List>
-    );
+    return <BookingsList endpoint="http://localhost:3001/employeeBookingsOver/1" />;
 }
 
 function TabPanel(props) {
@@ -157,7 +98,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
