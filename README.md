@@ -12,3 +12,5 @@ Then navigate to a new terminal for the client directory
 In client directory, run:
 npm install and npm start
 
+XX LINA WAS HERE XX
+
