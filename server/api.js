@@ -121,7 +121,7 @@ app.get("/hotelChains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:
          or (startDate <= $7 and endDate >= $7)
 	    	 or (startDate <= $8 and endDate >= $8)
 	    	 or (startDate >= $7 and endDate <= $8))
-	    	) order by hotelname asc limit 10;
+	    	) order by hotelname, roomNo asc limit 25;
     `
     const hotelBookings = await db.any(
       query, [chainName, country, size, rating, capacity, pricePerDay, start, end]

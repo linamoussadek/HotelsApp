@@ -10,6 +10,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import NoRoomsSnackbar from './ResultsGrid'
 
 
 function AcceptButton() {
@@ -29,14 +30,16 @@ function DiscardButton() {
 }
 
 
-function BookingsList({endpoint}){
+function BookingsList({endpoint, buttons}){
     const [employeeBookings, setEmployeeBookings] = React.useState([]);
+    const [isLoading, setIsLoading] = React.useState(true);
     
     const getEmployeeBookings = async () => {
         try {
             const response = await fetch(endpoint);
             const jsonData = await response.json();
             setEmployeeBookings(jsonData);
+            setIsLoading(false);
         } catch (err) {
             console.error(err.message);
         }
@@ -45,6 +48,7 @@ function BookingsList({endpoint}){
         getEmployeeBookings();
     }, []);
     console.log(employeeBookings)
+    if(isLoading) return <NoRoomsSnackbar text = "Loading..."></NoRoomsSnackbar>
     if(employeeBookings.length === 0) return <div>No bookings at this time</div>
 
     return (
@@ -65,8 +69,12 @@ function BookingsList({endpoint}){
                                 new Intl.DateTimeFormat('en-US', { dateStyle: 'full'}).format(new Date(booking.startdate)) + " to "}
                                 <br></br>
                                 {new Intl.DateTimeFormat('en-US', { dateStyle: 'full'}).format(new Date(booking.enddate))}
+                                {buttons &&
+                                <>
                                     <AcceptButton/>
                                     <DiscardButton/>
+                                </>
+                                }
                             </div>
                         }
                     />
@@ -78,11 +86,11 @@ function BookingsList({endpoint}){
 }
 
 function AlignItemsListPending() {
-    return <BookingsList endpoint="http://localhost:3001/employeeBookingsNotOver/1" />;
+    return <BookingsList endpoint="http://localhost:3001/employeeBookingsNotOver/1" buttons={true} />;
 }
 
 function AlignItemsListHistory() {
-    return <BookingsList endpoint="http://localhost:3001/employeeBookingsOver/1" />;
+    return <BookingsList endpoint="http://localhost:3001/employeeBookingsOver/1" buttons={false} />;
 }
 
 function TabPanel(props) {
