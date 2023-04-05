@@ -147,12 +147,17 @@ create table Booking(
 
 
 
--- Booking index for retrieving Bookings for a specific hotel - i.e employee's hotel
-create index booking_hotel_index on Booking (hotelID);
+-- Indexes for the large booking query:
+create index booking_hotel_address on Address (country, addressID);
 
--- Contact indexes for retrieving contact info of hotels and chains
-create index hotel_contact_index on HotelContact (hotelID);
-create index chain_contact_index on ChainContact (chainID);
+create index booking_hotel_chain on HotelChain (chainName, chainID);
+create index booking_chain_contact on ChainContact (chainID);
+
+create index booking_hotel on Hotel (chainID, addressID, rating, hotelID);
+create index booking_hotel_contact on HotelContact (hotelID);
+
+create index booking_room on Room (hotelID, roomNo, capacity, pricePerDay);
+create index booking_booking on Booking (roomNo, hotelID, startDate, endDate);
 
 
 
