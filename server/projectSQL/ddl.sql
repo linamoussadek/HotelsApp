@@ -1,5 +1,3 @@
-create database HotelDB;
-
 create table Address(
     addressID int GENERATED ALWAYS AS IDENTITY,
     street varchar(60) not null,

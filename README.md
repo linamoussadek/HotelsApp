@@ -1,16 +1,21 @@
 # HotelsApp
 
-An e-booking app for (fictional) hotels, created with React, Express, Node, and PostgreSQL. 
+An e-booking app for (fictional) hotels, created with: React, Express, Node, and ElephantSQL. 
 
-Steps to run: 
+## Steps to run:
+> You will need [Node](https://nodejs.org/en) installed on your machine
 
-In server directory, run:
-npm install and npm start (or npm run dev for live updates)
+1. Download or clone the repository
 
-Then navigate to a new terminal for the client directory
+2. Set up the server
+In the command line for the project:
+    1. Navigate to the server folder: `cd server`
+    2. Install dependencies: `npm install`
+    3. Start the server: 'npm run dev' or 'npm start' ~ dev provides live updates with nodemon
 
-In client directory, run:
-npm install and npm start
-
-XX LINA WAS HERE XX
+3. Set up the client application
+    1. Create a new terminal window
+    2. Navigate to the client folder: `cd client`
+    3. Install dependencies: `npm install`
+    4. Start the application: `npm start`
 

@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const pool = require("./db");
+const db = require("./elephant");
 
 // Middleware
 
@@ -18,8 +18,8 @@ app.use(express.json())
 // Ex: http://localhost:3001/hotelchains
 app.get("/hotelChains", async (req, res) => {
   try {
-    const allHotelChains = await pool.query("select chainName from hotelchain;")
-    res.json(allHotelChains.rows)
+    const allHotelChains = await db.any("select chainName from hotelchain;")
+    res.json(allHotelChains)
     } catch (err) {
       console.error(err.message)
     }
@@ -28,11 +28,11 @@ app.get("/hotelChains", async (req, res) => {
 // Get all countries and number of rooms in each country
 app.get("/countryCapacities", async (req, res) => {
   try {
-    const allCountries = await pool.query(
+    const allCountries = await db.any(
       `select country, sum(num_available_rooms) from num_available_rooms_in_city
 	      group by country order by country asc;`
     )
-    res.json(allCountries.rows)
+    res.json(allCountries)
     } catch (err) {
       console.error(err.message)
     }
@@ -41,8 +41,8 @@ app.get("/countryCapacities", async (req, res) => {
 // Get all hotel capacities (number of rooms in hotels)
 app.get("/hotelCapacities", async (req, res) => {
   try {
-    const allHotelCapacities = await pool.query("select distinct num_rooms from num_rooms_in_hotel order by num_rooms asc;")
-    res.json(allHotelCapacities.rows)
+    const allHotelCapacities = await db.any("select distinct num_rooms from num_rooms_in_hotel order by num_rooms asc;")
+    res.json(allHotelCapacities)
     } catch (err) {
       console.error(err.message)
     }
@@ -51,8 +51,8 @@ app.get("/hotelCapacities", async (req, res) => {
 // Get all room capacities
 app.get("/roomCapacities", async (req, res) => {
   try {
-    const allRoomCapacities = await pool.query("select distinct capacity from room_capacities_in_hotel order by capacity asc;")
-    res.json(allRoomCapacities.rows)
+    const allRoomCapacities = await db.any("select distinct capacity from room_capacities_in_hotel order by capacity asc;")
+    res.json(allRoomCapacities)
     } catch (err) {
       console.error(err.message)
     }
@@ -61,8 +61,8 @@ app.get("/roomCapacities", async (req, res) => {
 // Get all hotel ratings
 app.get("/hotelRatings", async (req, res) => {
   try {
-    const allRatings = await pool.query("select distinct rating from hotel order by rating asc;")
-    res.json(allRatings.rows)
+    const allRatings = await db.any("select distinct rating from hotel order by rating asc;")
+    res.json(allRatings)
     } catch (err) {
       console.error(err.message)
     }
@@ -71,8 +71,8 @@ app.get("/hotelRatings", async (req, res) => {
 // Get min and max price per day of room
 app.get("/maxRoomPrice", async (req, res) => {
   try {
-    const maxPrice = await pool.query("select max(pricePerDay) as maxPrice from room;")
-    res.json(maxPrice.rows)
+    const maxPrice = await db.one("select max(pricePerDay) as maxPrice from room;")
+    res.json(maxPrice)
     } catch (err) {
       console.error(err.message)
     }
@@ -113,10 +113,10 @@ app.get("/hotelChains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:
 	    	 OR (startDate >= $7 AND endDate <= $8))
 	    	);
     `
-    const hotelBookings = await pool.query(
+    const hotelBookings = await db.any(
       query, [chainName, country, size, rating, capacity, pricePerDay, start, end]
     )
-    res.json(hotelBookings.rows)
+    res.json(hotelBookings)
   } catch (err) {
     console.error(err.message)
   }
@@ -129,19 +129,20 @@ app.get("/employeeBookingsNotOver/:employeeID", async (req, res) => {
     const { employeeID } = req.params
     console.log(req.params)
     const query = 
-    `select person.firstName, person.lastName, roomNo, hotelID, startDate, endDate from booking
+    `select person.firstName, person.lastName, roomNo, booking.hotelID, hotelname, startDate, endDate from booking
     join person on person.ssn = (select ssn from customer where 
                   customer.customerID = booking.customerID)
-    and booking.hotelID in (select hotelID from worksAt where
-                worksAt.employeeID = $1)
+    join hotel on booking.hotelID = hotel.hotelID
+    where booking.hotelID in (select hotelID from worksAt where
+                worksAt.employeeID = 1)
     and canceled = false
     and checkedIn = false
-	  and endDate >= current_date;
+	  and endDate::date >= current_date;
     `
-    const hotelBookings = await pool.query(
+    const hotelBookings = await db.any(
       query, [employeeID]
     )
-    res.json(hotelBookings.rows)
+    res.json(hotelBookings)
   } catch (err) {
     console.error(err.message)
   }
@@ -155,19 +156,20 @@ app.get("/employeeBookingsOver/:employeeID", async (req, res) => {
     const { employeeID } = req.params
     console.log(req.params)
     const query = 
-    `select person.firstName, person.lastName, roomNo, hotelID, startDate, endDate from booking
+    `select person.firstName, person.lastName, roomNo, booking.hotelID, hotelname, startDate, endDate from booking
     join person on person.ssn = (select ssn from customer where 
                   customer.customerID = booking.customerID)
-    and booking.hotelID in (select hotelID from worksAt where
-                worksAt.employeeID = $1)
+    join hotel on booking.hotelID = hotel.hotelID
+    where booking.hotelID in (select hotelID from worksAt where
+                worksAt.employeeID = 1)
     and (canceled = true
     or checkedIn = true
-	  or endDate < current_date);
+	  or endDate::date < current_date);
     `
-    const hotelBookingsHistory = await pool.query(
+    const hotelBookingsHistory = await db.any(
       query, [employeeID]
     )
-    res.json(hotelBookingsHistory.rows)
+    res.json(hotelBookingsHistory)
   } catch (err) {
     console.error(err.message)
   }

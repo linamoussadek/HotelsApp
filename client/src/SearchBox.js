@@ -46,12 +46,12 @@ function BasicSelectHotelChain() {
     const [hotelChains, setHotelChains] = React.useState([]);
     const getHotelChains = async () => {
         try {
-          const response = await fetch("http://localhost:3001/hotelChains");
-          const jsonData = await response.json();
-    
-          setHotelChains(jsonData);
+            const response = await fetch("http://localhost:3001/hotelChains");
+            const jsonData = await response.json();
+            
+            setHotelChains(jsonData);
         } catch (err) {
-          console.error(err.message);
+            console.error(err.message);
         }
     };
     React.useEffect(() => {
@@ -89,12 +89,12 @@ function BasicSelectCountry() {
     const [countries, setCountries] = React.useState([]);
     const getCountries = async () => {
         try {
-          const response = await fetch("http://localhost:3001/countryCapacities");
-          const jsonData = await response.json();
-    
-          setCountries(jsonData);
+            const response = await fetch("http://localhost:3001/countryCapacities");
+            const jsonData = await response.json();
+            
+            setCountries(jsonData);
         } catch (err) {
-          console.error(err.message);
+            console.error(err.message);
         }
     };
     React.useEffect(() => {
@@ -133,12 +133,12 @@ function BasicSelectNoOfStars() {
     const [hotelRatings, sethotelRatings] = React.useState([]);
     const gethotelRatings = async () => {
         try {
-          const response = await fetch("http://localhost:3001/hotelRatings");
-          const jsonData = await response.json();
-    
-          sethotelRatings(jsonData);
+            const response = await fetch("http://localhost:3001/hotelRatings");
+            const jsonData = await response.json();
+            
+            sethotelRatings(jsonData);
         } catch (err) {
-          console.error(err.message);
+            console.error(err.message);
         }
     };
     React.useEffect(() => {
@@ -176,12 +176,12 @@ function BasicSelectRoomCapacity() {
     const [roomCapacities, setRoomCapacities] = React.useState([]);
     const getroomCapacities = async () => {
         try {
-          const response = await fetch("http://localhost:3001/roomCapacities");
-          const jsonData = await response.json();
-    
-          setRoomCapacities(jsonData);
+            const response = await fetch("http://localhost:3001/roomCapacities");
+            const jsonData = await response.json();
+            
+            setRoomCapacities(jsonData);
         } catch (err) {
-          console.error(err.message);
+            console.error(err.message);
         }
     };
     React.useEffect(() => {
@@ -231,12 +231,12 @@ function BasicSelectHotelSize() {
     const [hotelCapacities, setHotelCapacities] = React.useState([]);
     const getHotelCapacities = async () => {
         try {
-          const response = await fetch("http://localhost:3001/hotelCapacities");
-          const jsonData = await response.json();
-    
-          setHotelCapacities(jsonData);
+            const response = await fetch("http://localhost:3001/hotelCapacities");
+            const jsonData = await response.json();
+            
+            setHotelCapacities(jsonData);
         } catch (err) {
-          console.error(err.message);
+            console.error(err.message);
         }
     };
     React.useEffect(() => {
@@ -275,22 +275,22 @@ function InputSlider() {
         setPricePerDay(event.target.value === '' ? '' : Number(event.target.value));
     };
 
-    const [maxPrice, setMaxPrice] = React.useState([]);
+    const [maxPrice, setMaxPrice] = React.useState({ maxprice: null});
+    
     const getMaxPrice = async () => {
         try {
-          const response = await fetch("http://localhost:3001/maxRoomPrice");
-          const jsonData = await response.json();
-    
-          setMaxPrice(jsonData);
+            const response = await fetch("http://localhost:3001/maxRoomPrice");
+            const jsonData = await response.json();
+            setMaxPrice(jsonData);
         } catch (err) {
-          console.error(err.message);
+            console.error(err.message);
         }
     };
     React.useEffect(() => {
         getMaxPrice();
       }, []);
     // console.log(maxPrice)
-    const maximumPrice = maxPrice.length === 1 ? maxPrice[0].maxprice : 1000
+    const maximumPrice = maxPrice.maxprice || 999
 
     const handleBlur = () => {
         if (pricePerDay < 0) {
