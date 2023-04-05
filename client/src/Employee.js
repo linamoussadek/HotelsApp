@@ -53,7 +53,7 @@ function BookingsList({endpoint}){
             {employeeBookings.map(booking => (
                 <ListItem alignItems="flex-start" key={booking.roomno+""+booking.hotelid+""+booking.startdate+"LI1"}>
                     <ListItemAvatar>
-                        <Avatar alt="Michael Linason" src="/static/images/avatar/1.jpg" />
+                        <Avatar alt={booking.firstname + " " + booking.lastname} src="/static/images/avatar/1.jpg" />
                     </ListItemAvatar>
                     <ListItemText
                         disableTypography
