@@ -83,7 +83,16 @@ app.get("/maxRoomPrice", async (req, res) => {
 // Ex: http://localhost:3001/hotelchains/Le Ritz/hotels/Canada/3/5/rooms/4/300/dates/2021-10-30/2021-10-31
 app.get("/hotelChains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:pricePerDay/dates/:start/:end", async (req, res) => {
   try {
-    const { chainName, country, size, rating, capacity, pricePerDay, start, end } = req.params
+    let { chainName, country, size, rating, capacity, pricePerDay, start, end } = req.params
+    chainName = 'null' ? null : chainName
+    country = 'null' ? null : country
+    size = 'null' ? null : size
+    rating = 'null' ? null : rating
+    capacity = 'null' ? null : capacity
+    pricePerDay = 'null' ? null : pricePerDay
+    start = 'null' ? null : start
+    end = 'null' ? null : end
+
     console.log(req.params)
     const query = 
     `select hotelname, chainname, street, city, stateOrProvince, country, contactinfo,
@@ -108,7 +117,7 @@ app.get("/hotelChains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:
       and (select count (*) = 0 from booking where 
 	    	 booking.roomNo = room.roomNo and 
 	    	 booking.hotelID = room.hotelID and
-	    	 (stardate is null and endDate is null)
+	    	 ((startDate is null and endDate is null)
          or (startDate <= $7 and endDate >= $7)
 	    	 or (startDate <= $8 and endDate >= $8)
 	    	 or (startDate >= $7 and endDate <= $8))
