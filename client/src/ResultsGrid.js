@@ -148,7 +148,6 @@ export default function ResultsGrid() {
     const getRooms = async (hotelchain, country, hotelsize, rating, roomcapacity, priceperday, startdate, enddate) => {
         try {
             const endpoint = `http://localhost:3001/hotelChains/${hotelchain}/hotels/${country}/${hotelsize}/${rating}/rooms/${roomcapacity}/${priceperday}/dates/${startdate}/${enddate}`
-            console.log(endpoint)
             const response = await fetch(endpoint);
             const jsonData = await response.json();    
             setRooms(jsonData);
@@ -160,20 +159,20 @@ export default function ResultsGrid() {
 
     // Get criteria values for rooms route from localstorage
     React.useEffect(() => {
-        // Get the initial values from local storage
-        const hotelchain = window.localStorage.getItem('hotelchain') || null;
-        const country = window.localStorage.getItem('country') || null;
-        const hotelsize = window.localStorage.getItem('hotelsize') || null;
-        const rating = window.localStorage.getItem('rating') || null;
-        const roomcapacity = window.localStorage.getItem('roomcapacity') || null;
-        const priceperday = window.localStorage.getItem('priceperday') || null;
-        // const startdate = window.localStorage.getItem('startdate') || null;
-        // const enddate = window.localStorage.getItem('enddate') || null;
-        const startdate = '2022-04-04'
-        const enddate = '2022-04-20'
-        
-        console.log(hotelchain, country, hotelsize, rating, roomcapacity, priceperday, startdate, enddate)
-        getRooms(hotelchain, country, hotelsize, rating, roomcapacity, priceperday, startdate, enddate);
+        const updateRooms = () => {
+            const hotelChain = window.localStorage.getItem('hotelchain') || null;
+            const country = window.localStorage.getItem('country') || null;
+            const hotelSize = window.localStorage.getItem('size') || null;
+            const rating = window.localStorage.getItem('rating') || null;
+            const roomCapacity = window.localStorage.getItem('capacity') || null;
+            const pricePerDay = window.localStorage.getItem('priceperday') || null;
+            const startDate = window.localStorage.getItem('startdate') || null;
+            const endDate = window.localStorage.getItem('enddate') || null;
+            console.log(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate);
+
+            getRooms(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate);
+        };
+        updateRooms();
     }, []);
     
 
