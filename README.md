@@ -1,6 +1,6 @@
 # HotelsApp
 
-An e-booking app for (fictional) hotels, created with React, Express, Node, and ElephantSQL. 
+An e-booking app for (fictional) hotels, created with: React, Express, Node, and ElephantSQL. 
 
 ## Steps to run:
 > You will need [Node](https://nodejs.org/en) installed on your machine
