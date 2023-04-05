@@ -68,10 +68,17 @@ function DrawerAppBar(props) {
                     >
                         HOLISTAY
                     </Typography>
+                    <Box sx={{ display: { xs: 'none', sm: 'block', mr: 5} }}>
+                        {navItems.map((item) => (
+                            <Button variant="contained" sx={{m: 2}} color={"secondary"}>
+                                <Link to="/">Home</Link>
+                            </Button>
+                        ))}
+                    </Box>
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                         {navItems.map((item) => (
-                            <Button key={item} sx={{ color: '#fff' }}>
-                                <Link to="/Employee">{item}</Link>
+                            <Button variant="contained" key={item} sx={{m: 2}} color={"secondary"}>
+                                <Link to="/EmployeeLogin">{item}</Link>
                             </Button>
                         ))}
                     </Box>
