@@ -41,6 +41,7 @@ function BasicSelectHotelChain() {
 
     const handleChange = (event) => {
         setHotelChain(event.target.value);
+        window.localStorage.setItem('hotelchain', event.target.value);
     };
 
     const [hotelChains, setHotelChains] = React.useState([]);
@@ -84,6 +85,7 @@ function BasicSelectCountry() {
 
     const handleChange = (event) => {
         setCountry(event.target.value);
+        window.localStorage.setItem('country', event.target.value);
     };
 
     const [countries, setCountries] = React.useState([]);
@@ -128,6 +130,7 @@ function BasicSelectNoOfStars() {
 
     const handleChange = (event) => {
         setnoOfStars(event.target.value);
+        window.localStorage.setItem('rating', event.target.value);
     };
 
     const [hotelRatings, sethotelRatings] = React.useState([]);
@@ -171,6 +174,7 @@ function BasicSelectRoomCapacity() {
 
     const handleChange = (event) => {
         setRoomCapacity(event.target.value);
+        window.localStorage.setItem('roomcapacity', event.target.value);
     };
 
     const [roomCapacities, setRoomCapacities] = React.useState([]);
@@ -226,6 +230,8 @@ function BasicSelectHotelSize() {
 
     const handleChange = (event) => {
         setHotelCapacity(event.target.value);
+        window.localStorage.setItem('hotelsize', event.target.value);
+        localStorage["bar"] = "Aaaaaasdfkjnsadfkjnsaf";
     };
 
     const [hotelCapacities, setHotelCapacities] = React.useState([]);
@@ -269,6 +275,7 @@ function InputSlider() {
 
     const handleSliderChange = (event, newValue) => {
         setPricePerDay(newValue);
+        window.localStorage.setItem('priceperday', event.target.value);
     };
 
     const handleInputChange = (event) => {
@@ -383,6 +390,7 @@ function ColumnsGrid() {
 }
 
 export default function MediaCard() {
+    window.localStorage.clear()
     return (
         <Card sx={{ maxWidth: 1500 }}>
             <CardContent>

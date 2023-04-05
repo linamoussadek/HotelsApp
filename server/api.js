@@ -108,9 +108,10 @@ app.get("/hotelChains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:
       and (select count (*) = 0 from booking where 
 	    	 booking.roomNo = room.roomNo and 
 	    	 booking.hotelID = room.hotelID and
-	    	 ((startDate <= $7 AND endDate >= $7)
-	    	 OR (startDate <= $8 AND endDate >= $8)
-	    	 OR (startDate >= $7 AND endDate <= $8))
+	    	 (stardate is null and endDate is null)
+         or (startDate <= $7 and endDate >= $7)
+	    	 or (startDate <= $8 and endDate >= $8)
+	    	 or (startDate >= $7 and endDate <= $8))
 	    	);
     `
     const hotelBookings = await db.any(

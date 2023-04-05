@@ -11,6 +11,9 @@ import {useState} from "react";
 import 'reactjs-popup/dist/index.css';
 import CustomPopup from "./CustomPopup";
 import TextField from '@mui/material/TextField'
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 function RegisterForm({ onClose }) {
@@ -93,6 +96,45 @@ function RegisterForm({ onClose }) {
         </div>
     );
 }
+
+
+function NoRoomsSnackbar() {
+    const [open, setOpen] = React.useState(true);
+  
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpen(false);
+    };
+  
+    const action = (
+      <React.Fragment>
+        <IconButton
+          size="small"
+          aria-label="close"
+          color="inherit"
+          onClick={handleClose}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </React.Fragment>
+    );
+  
+    return (
+      <div>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="No rooms found with that criteria"
+          action={action}
+        />
+      </div>
+    );
+  }
+
 export default function ResultsGrid() {
     const [visibility, setVisibility] = useState(false);
 
@@ -100,23 +142,38 @@ export default function ResultsGrid() {
         setVisibility(e);
     };    
 
-    // Ex default values for rooms route: 
-
     const [rooms, setRooms] = useState([]);
-    const getRooms = async () => {
+
+    const getRooms = async (hotelchain, country, hotelsize, rating, roomcapacity, priceperday, startdate, enddate) => {
         try {
-          const response = await fetch("http://localhost:3001/hotelChains/Le Ritz/hotels/Canada/3/5/rooms/4/400/dates/2021-10-30/2021-10-31");
-          const jsonData = await response.json();
-    
-          setRooms(jsonData);
+            const endpoint = `http://localhost:3001/hotelChains/${hotelchain}/hotels/${country}/${hotelsize}/${rating}/rooms/${roomcapacity}/${priceperday}/dates/${startdate}/${enddate}`
+            console.log(endpoint)
+            const response = await fetch(endpoint);
+            const jsonData = await response.json();    
+            setRooms(jsonData);
         } catch (err) {
-          console.error(err.message);
+            console.error(err.message);
         }
     };
 
+    // Get criteria values for rooms route from localstorage
     React.useEffect(() => {
-        getRooms();
-      }, []);
+        // Get the initial values from local storage
+        const hotelchain = window.localStorage.getItem('hotelchain') || null;
+        const country = window.localStorage.getItem('country') || null;
+        const hotelsize = window.localStorage.getItem('hotelsize') || null;
+        const rating = window.localStorage.getItem('rating') || null;
+        const roomcapacity = window.localStorage.getItem('roomcapacity') || null;
+        const priceperday = window.localStorage.getItem('priceperday') || null;
+        // const startdate = window.localStorage.getItem('startdate') || null;
+        // const enddate = window.localStorage.getItem('enddate') || null;
+        const startdate = '2022-04-04'
+        const enddate = '2022-04-20'
+        
+        console.log(hotelchain, country, hotelsize, rating, roomcapacity, priceperday, startdate, enddate)
+        getRooms(hotelchain, country, hotelsize, rating, roomcapacity, priceperday, startdate, enddate);
+    }, []);
+    
 
     const roomViewMap = new Map()
     roomViewMap.set('Mountain View', './MountainView.jpg')
@@ -158,6 +215,7 @@ export default function ResultsGrid() {
         rooms
       }));
     // console.log(roomsByHotel)
+    if(roomsByHotel.length === 0) return <NoRoomsSnackbar></NoRoomsSnackbar>
 
     return (
         <>
