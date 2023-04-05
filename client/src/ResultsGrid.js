@@ -98,7 +98,7 @@ function RegisterForm({ onClose }) {
 }
 
 
-function NoRoomsSnackbar() {
+function NoRoomsSnackbar({text}) {
     const [open, setOpen] = React.useState(true);
   
     const handleClose = (event, reason) => {
@@ -128,7 +128,7 @@ function NoRoomsSnackbar() {
           open={open}
           autoHideDuration={6000}
           onClose={handleClose}
-          message="No rooms found with that criteria"
+          message={text}
           action={action}
         />
       </div>
@@ -143,6 +143,7 @@ export default function ResultsGrid() {
     };    
 
     const [rooms, setRooms] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const getRooms = async (hotelchain, country, hotelsize, rating, roomcapacity, priceperday, startdate, enddate) => {
         try {
@@ -151,6 +152,7 @@ export default function ResultsGrid() {
             const response = await fetch(endpoint);
             const jsonData = await response.json();    
             setRooms(jsonData);
+            setIsLoading(false);
         } catch (err) {
             console.error(err.message);
         }
@@ -215,7 +217,8 @@ export default function ResultsGrid() {
         rooms
       }));
     // console.log(roomsByHotel)
-    if(roomsByHotel.length === 0) return <NoRoomsSnackbar></NoRoomsSnackbar>
+    if(isLoading) return <NoRoomsSnackbar text = "Loading..."></NoRoomsSnackbar>
+    if(roomsByHotel.length === 0) return <NoRoomsSnackbar text = "No rooms found"></NoRoomsSnackbar>
 
     return (
         <>
