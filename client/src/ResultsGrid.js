@@ -77,7 +77,7 @@ function RegisterForm({ onClose }) {
                         </Box>
                     </Grid>
                 </Grid>
-                <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}}>Submit</Button>
+                <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}}>Book</Button>
             </Box>
             <hr/>
             <h2 align={'center'}>Already been here? Login</h2>
@@ -92,7 +92,7 @@ function RegisterForm({ onClose }) {
                     </Box>
                 </Grid>
             </Box>
-            <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}}>Log in</Button>
+            <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}}>Book</Button>
         </div>
     );
 }
@@ -260,7 +260,6 @@ export default function ResultsGrid() {
                                 <CardActions>
                                     <Button size="small" onClick={(e) => setVisibility(!visibility)}>Book this room</Button>
                                     <CustomPopup
-                                        title="BookingPopup"
                                         onClose={popupCloseHandler}
                                         show={visibility}
                                     >

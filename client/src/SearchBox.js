@@ -400,7 +400,7 @@ export default function MediaCard() {
                 <ColumnsGrid/>
             </CardContent>
             <CardActions>
-                <Button size="small">Search</Button>
+                <Button size="small" variant="contained">Search</Button>
             </CardActions>
         </Card>
     );
