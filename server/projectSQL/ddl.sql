@@ -129,8 +129,8 @@ create table Booking(
     canceled boolean not null,
     checkedIn boolean not null,
     constraint employee_check_in check(
-        employeeID is null and checkedIn = false or 
-        employeeID is not null and checkedIn = true
+        employeeID is null and (checkedIn = false and canceled = false) or 
+        employeeID is not null and (checkedIn = true or canceled = true)
     ),
     constraint maximum_booking_time check(
         extract(day from startDate::timestamp - endDate::timestamp) < 31 AND

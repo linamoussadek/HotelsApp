@@ -13,24 +13,49 @@ import Button from '@mui/material/Button';
 import NoRoomsSnackbar from './ResultsGrid'
 
 
-function AcceptButton() {
+function AcceptButton({ bookingInfo, change }) {
+    const accept = async() => {
+        const employeeID = window.localStorage.getItem('employeeID')
+        try {
+            await fetch(
+                `http://localhost:3001/bookingAccept/${employeeID}/${bookingInfo.roomno}/${bookingInfo.hotelid}`, 
+                { method: "PUT" }
+            );
+            await change()
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
     return (
         <Stack spacing={2} direction="row" sx={{ml:10, mb:1}}>
-            <Button variant="contained">Confirm</Button>
+            <Button variant="contained" onClick = {accept}>Confirm</Button>
         </Stack>
     );
 }
 
-function DiscardButton() {
+function DiscardButton({ bookingInfo, change }) {
+
+    const cancel = async() => {
+        const employeeID = window.localStorage.getItem('employeeID')
+        try {
+            await fetch(
+                `http://localhost:3001/bookingCancel/${employeeID}/${bookingInfo.roomno}/${bookingInfo.hotelid}`, 
+                { method: "PUT" }
+            );
+            await change()
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
     return (
         <Stack spacing={2} direction="row" sx={{mb:1}}>
-            <Button variant="outlined">Discard</Button>
+            <Button variant="outlined" onClick = {cancel}>Discard</Button>
         </Stack>
     );
 }
 
 
-function BookingsList({endpoint, buttons}){
+function BookingsList({endpoint, buttons, change}){
     const [employeeBookings, setEmployeeBookings] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
     
@@ -71,8 +96,8 @@ function BookingsList({endpoint, buttons}){
                                 {new Intl.DateTimeFormat('en-US', { dateStyle: 'full'}).format(new Date(booking.enddate))}
                                 {buttons &&
                                 <>
-                                    <AcceptButton/>
-                                    <DiscardButton/>
+                                    <AcceptButton bookingInfo = {booking} change={getEmployeeBookings}/>
+                                    <DiscardButton bookingInfo = {booking} change={getEmployeeBookings}/>
                                 </>
                                 }
                             </div>
@@ -85,14 +110,14 @@ function BookingsList({endpoint, buttons}){
     );
 }
 
-function AlignItemsListPending() {
+function AlignItemsListPending({ change }) {
     const employeeID = window.localStorage.getItem('employeeID')
-    return <BookingsList endpoint={"http://localhost:3001/employeeBookingsNotOver/"+employeeID} buttons={true} />;
+    return <BookingsList endpoint={"http://localhost:3001/employeeBookingsNotOver/"+employeeID} buttons={true}/>;
 }
 
-function AlignItemsListHistory() {
+function AlignItemsListHistory({ change }) {
     const employeeID = window.localStorage.getItem('employeeID')
-    return <BookingsList endpoint={"http://localhost:3001/employeeBookingsNotOver/"+employeeID} buttons={false} />;}
+    return <BookingsList endpoint={"http://localhost:3001/employeeBookingsOver/"+employeeID} buttons={false}/>;}
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -128,24 +153,24 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
-    const [value, setValue] = React.useState(0);
+    const [tab, setTab] = React.useState(0);
 
     const handleChange = (event, newValue) => {
-        setValue(newValue);
+        setTab(newValue);
     };
 
     return (
         <Box sx={{ width: '100%', mt:10}}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="booking tabs">
+                <Tabs value={tab} onChange={handleChange} aria-label="booking tabs">
                     <Tab label="Pending Bookings" {...a11yProps(0)} />
                     <Tab label="Bookings History" {...a11yProps(1)} />
                 </Tabs>
             </Box>
-            <TabPanel value={value} index={0}>
+            <TabPanel value={tab} index={0}>
                 <AlignItemsListPending/>
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel value={tab} index={1}>
                 <AlignItemsListHistory/>
             </TabPanel>
         </Box>

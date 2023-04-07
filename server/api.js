@@ -200,17 +200,34 @@ app.get("/employees", async (req, res) => {
     }
 });
 
-// Create a customer
-
-// Create a booking
-
-// Create a booking based on an existing user
-
-// Update booking status to cancelled
-
 // Update booking status to checkedIn
-
-
+app.put("/bookingAccept/:employeeID/:roomNo/:hotelID", async (req, res) => {
+  try {
+    const { employeeID, roomNo, hotelID} = req.params;
+    console.log(req.params)
+    const acceptBooking = await db.none(
+      "update booking set checkedIn = true, employeeID = $1 where roomNo = $2 and hotelID = $3",
+      [employeeID, roomNo, hotelID]
+    );
+    res.json("Booking was checked in");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+// Update booking status to canceled
+app.put("/bookingCancel/:employeeID/:roomNo/:hotelID", async (req, res) => {
+  try {
+    const { employeeID, roomNo, hotelID} = req.params;
+    console.log(req.params)
+    const acceptBooking = await db.none(
+      "update booking set canceled = true, employeeID = $1 where roomNo = $2 and hotelID = $3",
+      [employeeID, roomNo, hotelID]
+    );
+    res.json("Booking was checked in");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 // Port
 

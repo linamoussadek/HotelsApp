@@ -806,5 +806,8 @@ insert into Damage (roomNo, hotelID, details) values
 insert into Booking (customerID, roomNo, hotelID, employeeID, 
     startDate, endDate, canceled, checkedIn) values
     (1, 1, 1, null, current_date, current_date, false, false),
-    (1, 2, 1, null, current_date, current_date + interval '15 days', false, false);
+    (1, 2, 1, null, current_date, current_date + interval '15 days', false, false),
+    (1, 3, 1, null, current_date, current_date + interval '20 days', false, false),
+    (1, 4, 1, null, current_date, current_date + interval '20 days', false, false),
+    (1, 5, 1, null, current_date, current_date + interval '20 days', false, false);
 
