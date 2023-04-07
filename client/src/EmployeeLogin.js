@@ -56,7 +56,8 @@ export default function SignIn() {
             setFailLogin(true)
             return
         }
-        window.localStorage.setItem('employeeID', employeeID);
+        const employee = employees.find(employee => employee.employeeid === employeeID);
+        window.localStorage.setItem('employee', JSON.stringify(employee));
         let path = `/Employee_Page`; 
         navigate(path);
       }

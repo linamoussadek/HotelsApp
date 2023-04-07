@@ -15,7 +15,7 @@ import NoRoomsSnackbar from './ResultsGrid'
 
 function AcceptButton({ bookingInfo, change }) {
     const accept = async() => {
-        const employeeID = window.localStorage.getItem('employeeID')
+        const employeeID = JSON.parse(window.localStorage.getItem('employee')).employeeid
         try {
             await fetch(
                 `http://localhost:3001/bookingAccept/${employeeID}/${bookingInfo.roomno}/${bookingInfo.hotelid}`, 
@@ -36,7 +36,7 @@ function AcceptButton({ bookingInfo, change }) {
 function DiscardButton({ bookingInfo, change }) {
 
     const cancel = async() => {
-        const employeeID = window.localStorage.getItem('employeeID')
+        const employeeID = JSON.parse(window.localStorage.getItem('employee')).employeeid
         try {
             await fetch(
                 `http://localhost:3001/bookingCancel/${employeeID}/${bookingInfo.roomno}/${bookingInfo.hotelid}`, 
@@ -76,8 +76,12 @@ function BookingsList({endpoint, buttons, change}){
     if(isLoading) return <NoRoomsSnackbar text = "Loading..."></NoRoomsSnackbar>
     if(employeeBookings.length === 0) return <div>No bookings at this time</div>
 
+    const employee = JSON.parse(window.localStorage.getItem('employee'))
+    console.log(employee)
     return (
         <>
+        <div>{buttons && "Actionable bookings for employee "+employee.firstname+" "+employee.lastname}</div>
+        <div>{buttons && "Employee ID: "+employee.employeeid}</div>
         <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper', ml:40 }}>
             {employeeBookings.map(booking => (
                 <ListItem alignItems="flex-start" key={booking.roomno+""+booking.hotelid+""+booking.startdate+"LI1"}>
@@ -111,12 +115,12 @@ function BookingsList({endpoint, buttons, change}){
 }
 
 function AlignItemsListPending({ change }) {
-    const employeeID = window.localStorage.getItem('employeeID')
+    const employeeID = JSON.parse(window.localStorage.getItem('employee')).employeeid
     return <BookingsList endpoint={"http://localhost:3001/employeeBookingsNotOver/"+employeeID} buttons={true}/>;
 }
 
 function AlignItemsListHistory({ change }) {
-    const employeeID = window.localStorage.getItem('employeeID')
+    const employeeID = JSON.parse(window.localStorage.getItem('employee')).employeeid
     return <BookingsList endpoint={"http://localhost:3001/employeeBookingsOver/"+employeeID} buttons={false}/>;}
 
 function TabPanel(props) {
