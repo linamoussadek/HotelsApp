@@ -47,7 +47,7 @@ function BookingsList({endpoint, buttons}){
     React.useEffect(() => {
         getEmployeeBookings();
     }, []);
-    console.log(employeeBookings)
+    // console.log(employeeBookings)
     if(isLoading) return <NoRoomsSnackbar text = "Loading..."></NoRoomsSnackbar>
     if(employeeBookings.length === 0) return <div>No bookings at this time</div>
 
@@ -86,12 +86,13 @@ function BookingsList({endpoint, buttons}){
 }
 
 function AlignItemsListPending() {
-    return <BookingsList endpoint="http://localhost:3001/employeeBookingsNotOver/1" buttons={true} />;
+    const employeeID = window.localStorage.getItem('employeeID')
+    return <BookingsList endpoint={"http://localhost:3001/employeeBookingsNotOver/"+employeeID} buttons={true} />;
 }
 
 function AlignItemsListHistory() {
-    return <BookingsList endpoint="http://localhost:3001/employeeBookingsOver/1" buttons={false} />;
-}
+    const employeeID = window.localStorage.getItem('employeeID')
+    return <BookingsList endpoint={"http://localhost:3001/employeeBookingsNotOver/"+employeeID} buttons={false} />;}
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;

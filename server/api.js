@@ -144,7 +144,7 @@ app.get("/employeeBookingsNotOver/:employeeID", async (req, res) => {
                   customer.customerID = booking.customerID)
     join hotel on booking.hotelID = hotel.hotelID
     where booking.hotelID in (select hotelID from worksAt where
-                worksAt.employeeID = 1)
+                worksAt.employeeID = $1)
     and canceled = false
     and checkedIn = false
 	  and endDate::date >= current_date;
@@ -171,7 +171,7 @@ app.get("/employeeBookingsOver/:employeeID", async (req, res) => {
                   customer.customerID = booking.customerID)
     join hotel on booking.hotelID = hotel.hotelID
     where booking.hotelID in (select hotelID from worksAt where
-                worksAt.employeeID = 1)
+                worksAt.employeeID = $1)
     and (canceled = true
     or checkedIn = true
 	  or endDate::date < current_date);
@@ -185,21 +185,20 @@ app.get("/employeeBookingsOver/:employeeID", async (req, res) => {
   }
 })
 
-// Create an address, person, customer, and booking for new user
-// Ideas: do everything in one post like below, or have seperaet for each
-// app.post("/newCustomerBooking", async (req, res) => {
-//   try {
-//     const { street, city ... } = req.body;
-//     const newCustomerBooking = await pool.query(
-//       "insert ...",
-//       [street, city ...]
-//     );
-
-//     res.json(newTodo.rows[0]);
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
+// Get all employeeIDs
+app.get("/employees", async (req, res) => {
+  try {
+    const { employeeID } = req.params
+    const query = 
+    `select employeeID, firstname, lastname from employee 
+    join person on employee.ssn = person.ssn`
+    const employee = await db.any(query, [employeeID])
+    res.json(employee)
+    console.log(employee)
+    } catch (err) {
+      console.error(err.message)
+    }
+});
 
 // Create a customer
 

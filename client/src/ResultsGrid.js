@@ -168,7 +168,7 @@ export default function ResultsGrid() {
             const pricePerDay = window.localStorage.getItem('priceperday') || null;
             const startDate = window.localStorage.getItem('startdate') || null;
             const endDate = window.localStorage.getItem('enddate') || null;
-            console.log(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate);
+            // console.log(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate);
 
             getRooms(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate);
         };
@@ -262,6 +262,7 @@ export default function ResultsGrid() {
                                     <CustomPopup
                                         onClose={popupCloseHandler}
                                         show={visibility}
+                                        title={"ResPopup"}
                                     >
                                         <RegisterForm/>
                                     </CustomPopup>

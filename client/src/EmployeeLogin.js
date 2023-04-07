@@ -3,15 +3,15 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
+
+
 
 function Copyright(props) {
     return (
@@ -30,14 +30,40 @@ const theme = createTheme();
 
 
 export default function SignIn() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+    const [employeeID, setEmployeeID] = React.useState(0);
+    const handleInputChange = (event) => {
+        setEmployeeID(isFinite(event.target.value) ? Number(event.target.value) : 0);
     };
+
+    const [employees, setEmployees] = React.useState([]);
+    const getEmployees = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/employees`);
+            const jsonData = await response.json();
+            setEmployees(jsonData)
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+
+    const [failLogin, setFailLogin] = React.useState(false);
+    let navigate = useNavigate(); 
+    const navigateToEmployee = async () =>{ 
+        // Check if ID is in the IDs list
+        const employeeIDs = employees.map(employee => employee.employeeid)
+        if (!employeeIDs.includes(employeeID)){
+            setFailLogin(true)
+            return
+        }
+        window.localStorage.setItem('employeeID', employeeID);
+        let path = `/Employee_Page`; 
+        navigate(path);
+      }
+
+      React.useEffect(() => {
+        getEmployees();
+    }, []);
 
     return (
         <ThemeProvider theme={theme}>
@@ -57,26 +83,25 @@ export default function SignIn() {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box noValidate sx={{ mt: 1 }}>
                         <TextField
+                            error={failLogin}
+                            helperText={failLogin ? 'Could not find an employee with that ID' : ''}
                             margin="normal"
                             required
                             fullWidth
                             id="employeeID"
                             label="Employee ID"
                             name="EmployeeID"
-                            autoComplete="email"
                             autoFocus
+                            onChange={handleInputChange}
                         />
-                        {/*<FormControlLabel*/}
-                        {/*    control={<Checkbox value="remember" color="primary" />}*/}
-                        {/*    label="Remember me"*/}
-                        {/*/>*/}
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 35 }}
+                            sx={{ mt: 3, mb: 5 }}
+                            onClick={navigateToEmployee}
                         >
                             Sign In
                         </Button>
