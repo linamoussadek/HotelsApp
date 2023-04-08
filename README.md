@@ -11,7 +11,7 @@ An e-booking app for (fictional) hotels, created with: React, Express, Node, and
 In the command line for the project:
     1. Navigate to the server folder: `cd server`
     2. Install dependencies: `npm install`
-    3. Start the server: 'npm run dev' or 'npm start' ~ dev provides live updates with nodemon
+    3. Start the server: `npm run dev` or `npm start` ~ dev provides live updates with nodemon
 
 3. Set up the client application
     1. Create a new terminal window
