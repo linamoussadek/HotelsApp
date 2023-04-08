@@ -345,7 +345,7 @@ function InputSlider() {
 
 function ColumnsGrid() {
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1}}>
             <Grid container spacing={3} columns={16}>
                 <Grid item xs={4}>
                     <Item>
@@ -392,7 +392,7 @@ function ColumnsGrid() {
 export default function MediaCard() {
     window.localStorage.clear()
     return (
-        <Card sx={{ maxWidth: 1500 }}>
+        <Card sx={{ maxWidth: 1500}}>
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                     What are you looking for?
@@ -403,5 +403,5 @@ export default function MediaCard() {
                 <Button size="small" variant="contained">Search</Button>
             </CardActions>
         </Card>
-    );
+);
 }

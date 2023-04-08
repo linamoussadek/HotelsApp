@@ -55,6 +55,15 @@ function RegisterForm({ onClose }) {
                             sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
                             noValidate
                             autoComplete="off">
+                            <TextField id="address-street" label="Street (Address)" variant="outlined" />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Box
+                            component="form"
+                            sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
+                            noValidate
+                            autoComplete="off">
                             <TextField id="address-city" label="City (Address)" variant="outlined" />
                         </Box>
                     </Grid>
@@ -222,7 +231,7 @@ export default function ResultsGrid() {
     return (
         <>
         {roomsByHotel.map(({ hotelname, chainname, address, contactinfo, rooms }) => (
-            <Box key={hotelname+"B"} sx={{ width: '100%', mt: 30, ml:2, mr:2, maxWidth:1500}}>
+            <Box key={hotelname+"B"} sx={{ width: '100%', mt: 10, ml:2, mr:2, maxWidth:1500}}>
                 <Typography key={hotelname+"T1"} variant="h5" component="div">
                     {hotelname+" | "+chainname}
                     <Typography key={hotelname+"T2"} variant="subtitle1" component="div">
@@ -262,7 +271,6 @@ export default function ResultsGrid() {
                                     <CustomPopup
                                         onClose={popupCloseHandler}
                                         show={visibility}
-                                        title={"ResPopup"}
                                     >
                                         <RegisterForm/>
                                     </CustomPopup>

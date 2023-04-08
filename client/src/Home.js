@@ -7,7 +7,7 @@ import ResultsGrid from "./ResultsGrid"
 
 function Home() {
   return (
-    <div className="Home">
+    <div className="Home" style={{backgroundColor:"rgba(247,249,252,0.86)"}}>
         <div className="container">
             <div className="home-image">
                 <HomeImage />

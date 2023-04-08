@@ -29,12 +29,12 @@ function DrawerAppBar(props) {
             <AppBar component="nav">
                 <Toolbar>
                     <Typography
-                        variant="h6"
+                        variant="h4"
                         component="div"
                         sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-                        style={{color: 'white', fontFamily: 'Segue UI' }}
+                        style={{color: 'white', fontFamily: 'Gabriola', fontWeight:'bold' }}
                     >
-                        HOLISTAY
+                        Holistay
                     </Typography>
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                         {navItems.map((item) => (

@@ -54,6 +54,14 @@ function DiscardButton({ bookingInfo, change }) {
     );
 }
 
+function DisabledButton() {
+    return (
+        <Stack direction="row" spacing={2}>
+            <Button disabled>Cancelled or accepted or outdated</Button>
+        </Stack>
+    );
+}
+
 
 function BookingsList({endpoint, buttons, change}){
     const [employeeBookings, setEmployeeBookings] = React.useState([]);
@@ -82,7 +90,7 @@ function BookingsList({endpoint, buttons, change}){
         <>
         <div>{buttons && "Actionable bookings for employee "+employee.firstname+" "+employee.lastname}</div>
         <div>{buttons && "Employee ID: "+employee.employeeid}</div>
-        <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper', ml:40 }}>
+        <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper', ml:50 }}>
             {employeeBookings.map(booking => (
                 <ListItem alignItems="flex-start" key={booking.roomno+""+booking.hotelid+""+booking.startdate+"LI1"}>
                     <ListItemAvatar>
@@ -104,11 +112,16 @@ function BookingsList({endpoint, buttons, change}){
                                     <DiscardButton bookingInfo = {booking} change={getEmployeeBookings}/>
                                 </>
                                 }
+                                {!buttons &&
+                                    <>
+                                        <DisabledButton/>
+                                    </>
+                                }
                             </div>
                         }
                     />
                 </ListItem>
-            ))}
+                ))}
         </List>
         </>
     );
@@ -156,25 +169,25 @@ function a11yProps(index) {
     };
 }
 
-export default function BasicTabs() {
-    const [tab, setTab] = React.useState(0);
+export default function CenteredTabs() {
+    const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
-        setTab(newValue);
+        setValue(newValue);
     };
 
     return (
         <Box sx={{ width: '100%', mt:10}}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={tab} onChange={handleChange} aria-label="booking tabs">
+                <Tabs value={value} onChange={handleChange} aria-label="booking tabs" centered>
                     <Tab label="Pending Bookings" {...a11yProps(0)} />
                     <Tab label="Bookings History" {...a11yProps(1)} />
                 </Tabs>
             </Box>
-            <TabPanel value={tab} index={0}>
+            <TabPanel value={value} index={0}>
                 <AlignItemsListPending/>
             </TabPanel>
-            <TabPanel value={tab} index={1}>
+            <TabPanel value={value} index={1}>
                 <AlignItemsListHistory/>
             </TabPanel>
         </Box>
