@@ -54,16 +54,18 @@ function DiscardButton({ bookingInfo, change }) {
     );
 }
 
-function DisabledButton() {
+function DisabledButton({ canceled, checkedin }) {
+    // Past booking is either canceled, checked in, or expired
+    const msg = canceled ? "Canceled" : (checkedin ? "Checked In" : "Expired")
     return (
         <Stack direction="row" spacing={2}>
-            <Button disabled>Cancelled or accepted or outdated</Button>
+            <Button disabled>{msg}</Button>
         </Stack>
     );
 }
 
 
-function BookingsList({endpoint, buttons, change}){
+function BookingsList({endpoint, buttons }){
     const [employeeBookings, setEmployeeBookings] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
     
@@ -85,7 +87,7 @@ function BookingsList({endpoint, buttons, change}){
     if(employeeBookings.length === 0) return <div>No bookings at this time</div>
 
     const employee = JSON.parse(window.localStorage.getItem('employee'))
-    console.log(employee)
+
     return (
         <>
         <div>{buttons && "Actionable bookings for employee "+employee.firstname+" "+employee.lastname}</div>
@@ -114,7 +116,7 @@ function BookingsList({endpoint, buttons, change}){
                                 }
                                 {!buttons &&
                                     <>
-                                        <DisabledButton/>
+                                        <DisabledButton canceled = {booking.canceled} checkedin = {booking.checkedin}/>
                                     </>
                                 }
                             </div>

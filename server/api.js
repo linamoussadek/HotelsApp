@@ -166,7 +166,7 @@ app.get("/employeeBookingsOver/:employeeID", async (req, res) => {
     const { employeeID } = req.params
     console.log(req.params)
     const query = 
-    `select person.firstName, person.lastName, roomNo, booking.hotelID, hotelname, startDate, endDate from booking
+    `select person.firstName, person.lastName, roomNo, booking.hotelID, hotelname, startDate, endDate, canceled, checkedIn from booking
     join person on person.ssn = (select ssn from customer where 
                   customer.customerID = booking.customerID)
     join hotel on booking.hotelID = hotel.hotelID
