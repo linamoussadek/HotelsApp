@@ -57,9 +57,10 @@ function DiscardButton({ bookingInfo, change }) {
 function DisabledButton({ canceled, checkedin }) {
     // Past booking is either canceled, checked in, or expired
     const msg = canceled ? "Canceled" : (checkedin ? "Checked In" : "Expired")
+    const color = canceled ? "red" : (checkedin ? "green" : "orange")
     return (
         <Stack direction="row" spacing={2}>
-            <Button disabled>{msg}</Button>
+            <Button disabled style={{color: color}}>{msg}</Button>
         </Stack>
     );
 }
