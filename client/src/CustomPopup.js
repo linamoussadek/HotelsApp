@@ -6,9 +6,62 @@ import TextField from '@mui/material/TextField'
 import Popup from 'reactjs-popup';
 import './CustomPopup.css';
 
-
+// const [registerInfo, setRoomCapacity] = React.useState(
+//     {
+//         firstname: '',
+//         lastname: '',
+//         ssn: '',
+//         street: '',
+//         city: '',
+//         stateorprovince: '',
+//         country: ''
+//     }
+// );
+// const [loginInfo, setLoginInfo] = React.useState({ssn: ''})
 function RegisterForm() {
     const fields = ["First Name", "Last Name", "SSN", "Empty", "Street", "City", "State/Province", "Country"]
+    
+    const [invalidFieldRegister, setInvalidFieldRegister] = React.useState(false);
+    const [invalidFieldLogin, setInvalidFieldLogin] = React.useState(false);
+
+    const [registerValues, setRegisterValues] = React.useState({
+        'First Name': '', 'Last Name': '', 'SSN': '', 
+        'Street': '', 'City': '', 'State/Province': '', 'Country': ''
+    });
+
+    const handleBookClick = () => {
+        if (!(registerValues['SSN'].length === 9) || !isFinite((registerValues['SSN']))){
+            setInvalidFieldRegister(true)
+            console.log("FAIL LOGIN")
+            return
+        }
+        for (let key in registerValues) {
+            if (registerValues[key] === "") {
+                alert("Cannot leave values empty")
+                return
+            }
+        }
+        console.log("SUCCESS LOGIN")
+    };
+    const handleFieldChange = (event) => {
+        const { id, value } = event.target;
+        setRegisterValues((prevState) => ({ ...prevState, [id]: value }));
+    };
+
+    const [loginValues, setLoginValues] = React.useState({'SSNLogin': ''});
+    const handleBookClickLogin = () => { // Maybe query ssns and check not in array
+        if (!(loginValues['SSNLogin'].length === 9) || !isFinite((loginValues['SSNLogin']))){
+            setInvalidFieldLogin(true)
+            console.log("FAIL LOGIN")
+            return
+        }
+        console.log("SUCCESS LOGIN")
+    };
+    const handleFieldChangeLogin = (event) => {
+        const { id, value } = event.target;
+        setLoginValues((prevState) => ({ ...prevState, [id]: value }));
+    };
+
     return (
         <div className="popup-container">
             <h2 align={'center'}>First Booking? Register</h2>
@@ -22,13 +75,20 @@ function RegisterForm() {
                                         sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
                                         noValidate
                                         autoComplete="off">
-                                        <TextField id={field} label={field} variant="outlined" />
+                                        <TextField 
+                                            error={field.localeCompare("SSN") === 0 ? invalidFieldRegister : false}
+                                            helperText={invalidFieldRegister && field.localeCompare("SSN") === 0 ? 'Invalid SSN' : ''}
+                                            id={field} label={field} variant="outlined" 
+                                            value={registerValues[field]} onChange={handleFieldChange}
+                                        />
                                     </Box>
                                 )}
                             </Grid>
                     ))}
                 </Grid>
-                <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}}>Book</Button>
+                <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}} onClick={handleBookClick}>
+                    Book
+                </Button>
             </Box>
             <hr/>
             <h2 align={'center'}>Already been here? Login</h2>
@@ -39,11 +99,18 @@ function RegisterForm() {
                         sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
                         noValidate
                         autoComplete="off">
-                        <TextField id="ssn-login" label="SSN" variant="outlined" />
+                        <TextField 
+                            error={invalidFieldLogin}
+                            helperText={invalidFieldLogin ? 'Invalid SSN' : ''}
+                            id="SSNLogin" label="SSN" variant="outlined" 
+                            value={loginValues["SSN"]} onChange={handleFieldChangeLogin}
+                        />
                     </Box>
                 </Grid>
             </Box>
-            <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}}>Book</Button>
+            <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}} onClick={handleBookClickLogin}>
+                Book
+            </Button>
         </div>
     );
 }
