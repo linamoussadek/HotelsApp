@@ -5,106 +5,13 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {useState} from "react";
 import 'reactjs-popup/dist/index.css';
 import CustomPopup from "./CustomPopup";
-import TextField from '@mui/material/TextField'
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-
-
-function RegisterForm({ onClose }) {
-    return (
-        <div className="popup-container">
-            <h2 align={'center'}>First Booking? Register</h2>
-            <Box sx={{ width: '100%' }}>
-                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={4}>
-                        <Box
-                            component="form"
-                            sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
-                            noValidate
-                            autoComplete="off">
-                            <TextField id="first-name" label="First Name" variant="outlined" />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Box
-                            component="form"
-                            sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
-                            noValidate
-                            autoComplete="off">
-                            <TextField id="last-name" label="Last Name" variant="outlined" />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Box
-                            component="form"
-                            sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
-                            noValidate
-                            autoComplete="off">
-                            <TextField id="ssn-register" label="SSN" variant="outlined" />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Box
-                            component="form"
-                            sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
-                            noValidate
-                            autoComplete="off">
-                            <TextField id="address-street" label="Street (Address)" variant="outlined" />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Box
-                            component="form"
-                            sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
-                            noValidate
-                            autoComplete="off">
-                            <TextField id="address-city" label="City (Address)" variant="outlined" />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Box
-                            component="form"
-                            sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
-                            noValidate
-                            autoComplete="off">
-                            <TextField id="address-state-province" label="State or Province (Address)" variant="outlined" />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Box
-                            component="form"
-                            sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
-                            noValidate
-                            autoComplete="off">
-                            <TextField id="address-country" label="Country (Address)" variant="outlined" />
-                        </Box>
-                    </Grid>
-                </Grid>
-                <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}}>Book</Button>
-            </Box>
-            <hr/>
-            <h2 align={'center'}>Already been here? Login</h2>
-            <Box sx={{ width: '100%' }}>
-                <Grid item xs={6}>
-                    <Box
-                        component="form"
-                        sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
-                        noValidate
-                        autoComplete="off">
-                        <TextField id="ssn-login" label="SSN" variant="outlined" />
-                    </Box>
-                </Grid>
-            </Box>
-            <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}}>Book</Button>
-        </div>
-    );
-}
 
 
 function NoRoomsSnackbar({text}) {
@@ -145,11 +52,6 @@ function NoRoomsSnackbar({text}) {
   }
 
 export default function ResultsGrid() {
-    const [visibility, setVisibility] = useState(false);
-
-    const popupCloseHandler = (e) => {
-        setVisibility(e);
-    };    
 
     const [rooms, setRooms] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -267,12 +169,7 @@ export default function ResultsGrid() {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small" onClick={(e) => setVisibility(!visibility)}>Book this room</Button>
-                                    <CustomPopup
-                                        onClose={popupCloseHandler}
-                                        show={visibility}
-                                    >
-                                        <RegisterForm/>
+                                    <CustomPopup>
                                     </CustomPopup>
                                 </CardActions>
                             </Card>
