@@ -12,7 +12,8 @@ import CustomPopup from "./CustomPopup";
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-
+import HomeImage from "./HomeImage";
+import SearchBox from "./SearchBox";
 
 function NoRoomsSnackbar({text}) {
     const [open, setOpen] = React.useState(true);
@@ -68,24 +69,32 @@ export default function ResultsGrid() {
         }
     };
 
+     const updateRooms = () => {
+        const hotelChain = window.localStorage.getItem('hotelchain') || null;
+        const country = window.localStorage.getItem('country') || null;
+        const hotelSize = window.localStorage.getItem('hotelsize') || null;
+        const rating = window.localStorage.getItem('rating') || null;
+        const roomCapacity = window.localStorage.getItem('roomcapacity') || null;
+        const pricePerDay = window.localStorage.getItem('priceperday') || null;
+        const startDate = window.localStorage.getItem('startdate') === 
+            '1969-12-31' ? null : window.localStorage.getItem('startdate');
+        const endDate = window.localStorage.getItem('enddate') === 
+            '1969-12-31' ? null : window.localStorage.getItem('enddate');
+        console.log(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate)
+        getRooms(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate);
+    };
+
     // Get criteria values for rooms route from localstorage
     React.useEffect(() => {
-        const updateRooms = () => {
-            const hotelChain = window.localStorage.getItem('hotelchain') || null;
-            const country = window.localStorage.getItem('country') || null;
-            const hotelSize = window.localStorage.getItem('size') || null;
-            const rating = window.localStorage.getItem('rating') || null;
-            const roomCapacity = window.localStorage.getItem('capacity') || null;
-            const pricePerDay = window.localStorage.getItem('priceperday') || null;
-            const startDate = window.localStorage.getItem('startdate') === 
-                '1969-12-31' ? null : window.localStorage.getItem('startdate');
-            const endDate = window.localStorage.getItem('enddate') === 
-                '1969-12-31' ? null : window.localStorage.getItem('enddate');
-
-            getRooms(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate);
-        };
         updateRooms();
     }, []);
+
+    const [refresh, setRefresh] = React.useState(false);
+    const refreshResults = () => {
+      updateRooms()
+      setRefresh(r => !r);
+      console.log(rooms)
+    }
     
 
     const roomViewMap = new Map()
@@ -126,13 +135,22 @@ export default function ResultsGrid() {
         address,
         contactinfo,
         rooms
-      }));
+    }));
     // console.log(roomsByHotel)
     if(isLoading) return <NoRoomsSnackbar text = "Loading..."></NoRoomsSnackbar>
     if(roomsByHotel.length === 0) return <NoRoomsSnackbar text = "No rooms found"></NoRoomsSnackbar>
 
+    
     return (
         <>
+        <div className="container">
+            <div className="home-image">
+                <HomeImage />
+            </div>
+            <div className="search-box">
+                <SearchBox refresh={refreshResults}/>
+            </div>
+        </div>
         <Box sx={{ width: '100%', mt: 15, ml:2, mr:2, maxWidth:1500}}></Box>
         {roomsByHotel.map(({ hotelname, chainname, address, contactinfo, rooms }) => (
             <Box key={hotelname+"B"} sx={{ width: '100%', mt: 10, ml:2, mr:2, maxWidth:1500}}>
@@ -182,6 +200,10 @@ export default function ResultsGrid() {
                 </Grid>
             </Box>
         ))}
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+          {rooms.length === 50 && <Typography color='grey' variant="body1">--- Showing the first 50 rooms ---</Typography>}
+          {rooms.length !== 50 && <Typography color='grey' variant="body1">--- Showing all available rooms ---</Typography>}
+        </div>        
         </>
     );
 }

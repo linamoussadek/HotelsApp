@@ -84,14 +84,16 @@ app.get("/maxRoomPrice", async (req, res) => {
 app.get("/hotelChains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:pricePerDay/dates/:start/:end", async (req, res) => {
   try {
     let { chainName, country, size, rating, capacity, pricePerDay, start, end } = req.params
-    chainName = 'null' ? null : chainName
-    country = 'null' ? null : country
-    size = 'null' ? null : size
-    rating = 'null' ? null : rating
-    capacity = 'null' ? null : capacity
-    pricePerDay = 'null' ? null : pricePerDay
-    start = 'null' ? null : start
-    end = 'null' ? null : end
+    chainName = chainName.localeCompare('null') === 0 ? null : chainName
+    country = country.localeCompare('null') === 0 ? null : country
+    size = size.localeCompare('null') === 0 ? null : size
+    rating = rating.localeCompare('null') === 0 ? null : rating
+    capacity = capacity.localeCompare('null') === 0 ? null : capacity
+    pricePerDay = pricePerDay.localeCompare('null') === 0 ? null : pricePerDay
+    start = start.localeCompare('null') === 0 ? null : start
+    end = end.localeCompare('null') === 0 ? null : end
+
+    console.log(chainName, country, size, rating, capacity, pricePerDay, start, end)
 
     console.log(req.params)
     const query = 
@@ -121,7 +123,7 @@ app.get("/hotelChains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:
          or (startDate <= $7 and endDate >= $7)
 	    	 or (startDate <= $8 and endDate >= $8)
 	    	 or (startDate >= $7 and endDate <= $8))
-	    	) order by hotelname, roomNo asc limit 25;
+	    	) order by hotelname, roomNo asc limit 50;
     `
     const hotelBookings = await db.any(
       query, [chainName, country, size, rating, capacity, pricePerDay, start, end]

@@ -117,7 +117,7 @@ function BasicSelectCountry() {
                 >
                     {countries.map(country => (
                         <MenuItem key={country.country} value={country.country}>
-                            {country.country+": "+country.sum+" rooms"}</MenuItem>
+                            {country.country+": "+country.sum+" total rooms"}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
@@ -287,6 +287,7 @@ function BasicSelectHotelSize() {
 
 function InputSlider() {
     const [pricePerDay, setPricePerDay] = React.useState(300);
+    window.localStorage.setItem('priceperday', 300);
 
     const handleSliderChange = (event, newValue) => {
         setPricePerDay(newValue);
@@ -404,8 +405,7 @@ function ColumnsGrid() {
     );
 }
 
-export default function MediaCard() {
-    window.localStorage.clear()
+export default function SearchBox({ refresh }) {
     return (
         <Card sx={{ maxWidth: 1500}}>
             <CardContent>
@@ -415,7 +415,7 @@ export default function MediaCard() {
                 <ColumnsGrid/>
             </CardContent>
             <CardActions>
-                <Button size="small" variant="contained">Search</Button>
+                <Button size="small" variant="contained" onClick={refresh}>Search</Button>
             </CardActions>
         </Card>
 );

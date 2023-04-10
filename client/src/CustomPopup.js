@@ -6,18 +6,7 @@ import TextField from '@mui/material/TextField'
 import Popup from 'reactjs-popup';
 import './CustomPopup.css';
 
-// const [registerInfo, setRoomCapacity] = React.useState(
-//     {
-//         firstname: '',
-//         lastname: '',
-//         ssn: '',
-//         street: '',
-//         city: '',
-//         stateorprovince: '',
-//         country: ''
-//     }
-// );
-// const [loginInfo, setLoginInfo] = React.useState({ssn: ''})
+
 function RegisterForm() {
 
     // Register part
