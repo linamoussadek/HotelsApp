@@ -77,9 +77,10 @@ export default function ResultsGrid() {
             const rating = window.localStorage.getItem('rating') || null;
             const roomCapacity = window.localStorage.getItem('capacity') || null;
             const pricePerDay = window.localStorage.getItem('priceperday') || null;
-            const startDate = window.localStorage.getItem('startdate') || null;
-            const endDate = window.localStorage.getItem('enddate') || null;
-            // console.log(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate);
+            const startDate = window.localStorage.getItem('startdate') === 
+                '1969-12-31' ? null : window.localStorage.getItem('startdate');
+            const endDate = window.localStorage.getItem('enddate') === 
+                '1969-12-31' ? null : window.localStorage.getItem('enddate');
 
             getRooms(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate);
         };
@@ -169,7 +170,9 @@ export default function ResultsGrid() {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <CustomPopup>
+                                    <CustomPopup
+                                        room = {room}
+                                    >
                                     </CustomPopup>
                                 </CardActions>
                             </Card>

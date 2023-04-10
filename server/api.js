@@ -96,7 +96,7 @@ app.get("/hotelChains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:
     console.log(req.params)
     const query = 
     `select hotelname, chainname, street, city, stateOrProvince, country, contactinfo,
-    room.roomNo, pricePerDay, capacity, extendable, roomView, amenity, details from room 
+    room.roomNo, room.hotelID, pricePerDay, capacity, extendable, roomView, amenity, details from room 
     join hotel on room.hotelid = hotel.hotelid 
     join address on hotel.addressid = address.addressid
     join hotelchain on hotel.chainid = hotelchain.chainid
@@ -117,7 +117,7 @@ app.get("/hotelChains/:chainName/hotels/:country/:size/:rating/rooms/:capacity/:
       and (select count (*) = 0 from booking where 
 	    	 booking.roomNo = room.roomNo and 
 	    	 booking.hotelID = room.hotelID and
-	    	 ((startDate is null and endDate is null)
+	    	 (($7 is null and $8 is null)
          or (startDate <= $7 and endDate >= $7)
 	    	 or (startDate <= $8 and endDate >= $8)
 	    	 or (startDate >= $7 and endDate <= $8))
@@ -188,13 +188,22 @@ app.get("/employeeBookingsOver/:employeeID", async (req, res) => {
 // Get all employeeIDs
 app.get("/employees", async (req, res) => {
   try {
-    const { employeeID } = req.params
     const query = 
     `select employeeID, firstname, lastname from employee 
     join person on employee.ssn = person.ssn`
-    const employee = await db.any(query, [employeeID])
+    const employee = await db.any(query)
     res.json(employee)
     console.log(employee)
+    } catch (err) {
+      console.error(err.message)
+    }
+});
+
+// Get all SSNs
+app.get("/customerSSNs", async (req, res) => {
+  try {
+    const ssns = await db.any("select ssn, customerID from Customer order by customerID asc;")
+    res.json(ssns)
     } catch (err) {
       console.error(err.message)
     }
@@ -205,7 +214,7 @@ app.put("/bookingAccept/:employeeID/:roomNo/:hotelID", async (req, res) => {
   try {
     const { employeeID, roomNo, hotelID} = req.params;
     console.log(req.params)
-    const acceptBooking = await db.none(
+    await db.none(
       "update booking set checkedIn = true, employeeID = $1 where roomNo = $2 and hotelID = $3",
       [employeeID, roomNo, hotelID]
     );
@@ -219,11 +228,28 @@ app.put("/bookingCancel/:employeeID/:roomNo/:hotelID", async (req, res) => {
   try {
     const { employeeID, roomNo, hotelID} = req.params;
     console.log(req.params)
-    const acceptBooking = await db.none(
+    await db.none(
       "update booking set canceled = true, employeeID = $1 where roomNo = $2 and hotelID = $3",
       [employeeID, roomNo, hotelID]
     );
-    res.json("Booking was checked in");
+    res.json("Booking was canceled");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// Make a booking with customer ssn
+app.post("/loginBooking/:customerID/:roomNo/:hotelID/:startDate/:endDate", async (req, res) => {
+  try {
+    const { customerID, roomNo, hotelID, startDate, endDate } = req.params;
+    console.log(req.params)
+    await db.none(
+      `insert into Booking(customerID, roomNo, hotelID, employeeID, startDate, endDate, canceled, checkedIn) 
+      values($1, $2, $3, null, $4, $5, false, false);
+      `,
+      [customerID, roomNo, hotelID, startDate, endDate]
+    );
+    res.json("Booking created");
   } catch (err) {
     console.error(err.message);
   }

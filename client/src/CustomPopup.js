@@ -19,15 +19,28 @@ import './CustomPopup.css';
 // );
 // const [loginInfo, setLoginInfo] = React.useState({ssn: ''})
 function RegisterForm() {
-    const fields = ["First Name", "Last Name", "SSN", "Empty", "Street", "City", "State/Province", "Country"]
-    
-    const [invalidFieldRegister, setInvalidFieldRegister] = React.useState(false);
-    const [invalidFieldLogin, setInvalidFieldLogin] = React.useState(false);
 
+    // Register part
+
+    const fields = ["First Name", "Last Name", "SSN", "Empty", "Street", "City", "State/Province", "Country"]
+    const [invalidFieldRegister, setInvalidFieldRegister] = React.useState(false);
     const [registerValues, setRegisterValues] = React.useState({
         'First Name': '', 'Last Name': '', 'SSN': '', 
         'Street': '', 'City': '', 'State/Province': '', 'Country': ''
     });
+
+    // List of customer SSNs
+    const [SSNs, setSSNs] = React.useState([]);
+    const getSSNs = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/customerSSNs`);
+            const jsonData = await response.json();
+            setSSNs(jsonData)
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
 
     const handleBookClick = () => {
         if (!(registerValues['SSN'].length === 9) || !isFinite((registerValues['SSN']))){
@@ -41,6 +54,10 @@ function RegisterForm() {
                 return
             }
         }
+        if (SSNs.map(entry => entry.ssn).includes(registerValues['SSN'])) {
+            alert("SSN is already in use")
+            return
+        }
         console.log("SUCCESS LOGIN")
     };
     const handleFieldChange = (event) => {
@@ -48,23 +65,52 @@ function RegisterForm() {
         setRegisterValues((prevState) => ({ ...prevState, [id]: value }));
     };
 
+    // Login part
+    const [invalidFieldLogin, setInvalidFieldLogin] = React.useState(false);
     const [loginValues, setLoginValues] = React.useState({'SSNLogin': ''});
-    const handleBookClickLogin = () => { // Maybe query ssns and check not in array
+    const loginBooking = async() => {
+        try {
+            const customerID = SSNs.find(entry => entry.ssn === loginValues['SSNLogin']).customerid;
+            const booking = JSON.parse(window.localStorage.getItem('room'))
+            const roomNo = booking.roomno
+            const hotelID = booking.hotelid
+            const startDate = window.localStorage.getItem('startdate')
+            const endDate = window.localStorage.getItem('enddate')
+            const endPoint = `http://localhost:3001/loginBooking/${customerID}/${roomNo}/${hotelID}/${startDate}/${endDate}`;
+            console.log(endPoint)
+            await fetch(endPoint, {
+                method: "POST",
+            });
+            window.location = "/";
+            alert("Booking was successful")
+        } catch (err) {
+            console.error(err.message);
+        }
+      };
+    const handleBookClickLogin = () => {
         if (!(loginValues['SSNLogin'].length === 9) || !isFinite((loginValues['SSNLogin']))){
             setInvalidFieldLogin(true)
             console.log("FAIL LOGIN")
             return
         }
-        console.log("SUCCESS LOGIN")
+        if (!(SSNs.map(entry => entry.ssn).includes(loginValues['SSNLogin']))) {
+            alert("Cannot find an account with that ssn")
+            return
+        }
+        loginBooking()
     };
     const handleFieldChangeLogin = (event) => {
         const { id, value } = event.target;
         setLoginValues((prevState) => ({ ...prevState, [id]: value }));
     };
 
+    React.useEffect(() => {
+        getSSNs();
+    }, []);
+
     return (
         <div className="popup-container">
-            <h2 align={'center'}>First Booking? Register</h2>
+            <h2 align={'center'}>First Booking? Register an account</h2>
             <Box sx={{ width: '100%' }}>
                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     {fields.map(field => (
@@ -91,7 +137,7 @@ function RegisterForm() {
                 </Button>
             </Box>
             <hr/>
-            <h2 align={'center'}>Already been here? Login</h2>
+            <h2 align={'center'}>Already been here? Book with SSN</h2>
             <Box sx={{ width: '100%' }}>
                 <Grid item xs={6}>
                     <Box
@@ -115,23 +161,41 @@ function RegisterForm() {
     );
 }
 
-export default function CustomPopup() {
+export default function CustomPopup({ room }) {
+    const [open, setOpen] = React.useState(false);
+    const closeModal = () => setOpen(false);
+    const openPopup = () => {
+        const start = window.localStorage.getItem('startdate')
+        const end = window.localStorage.getItem('enddate')
+        if (start === '1969-12-31' || end === '1969-12-31'){
+            alert("Please set a start and end date for your booking")
+            return
+        }
+        else if (Math.ceil((new Date(end)-new Date(start)) / (1000 * 60 * 60 * 24)) > 30){
+            alert("Cannot make booking for more than 30 days")
+            return
+        }
+        setOpen(o => !o)
+        window.localStorage.setItem('room', JSON.stringify(room))
+    }
     return (
-        <Popup
-            className="popup"
-            trigger={<Button size="small" className="button">Book this room</Button>}
-            modal
-            nested
-        >
-            {close => (
+        <div>
+            <Button size="small" className="button" onClick={openPopup}>
+                Book this room
+            </Button>
+            <Popup
+                className="popup"
+                open={open}
+                modal
+            >
                 <div className="modal">
-                    <button className="close" onClick={close}>
+                    <button className="close" onClick={closeModal}>
                         &times;
                     </button>
                     <RegisterForm></RegisterForm>
                 </div>
-            )}
-        </Popup>
+            </Popup>
+        </div>
     )
 }
 

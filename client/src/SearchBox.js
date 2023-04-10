@@ -216,10 +216,25 @@ function BasicSelectRoomCapacity() {
 
 
 function BasicDateRangePicker() {
+    const [dateRange, setDateRange] = React.useState([null, null]);
+    
+    React.useEffect(() => {
+        const start = new Date(dateRange[0])
+        const formatStart = start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + start.getDate();
+        const end = new Date(dateRange[1])
+        const formatEnd = end.getFullYear() + "-" + (end.getMonth() + 1) + "-" + end.getDate();
+        localStorage.setItem('startdate', formatStart);
+        localStorage.setItem('enddate', formatEnd);
+    }, [dateRange]);
+
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DateRangePicker']}>
-                <DateRangePicker localeText={{ start: 'Check-in', end: 'Check-out' }} />
+                <DateRangePicker
+                    value={dateRange}
+                    onChange={(newValue) => setDateRange(newValue)}
+                    localeText={{ start: 'Check-in', end: 'Check-out' }}
+                />
             </DemoContainer>
         </LocalizationProvider>
     );
