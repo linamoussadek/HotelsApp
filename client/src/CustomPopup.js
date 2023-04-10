@@ -41,8 +41,75 @@ function RegisterForm() {
         }
     };
 
+    const registerBooking = async() => {
+        try {
+            // Insert into Address, retrieve the new address
+            const street = registerValues['Street']
+            const city = registerValues['City']
+            const sOrP = registerValues['State/Province']
+            const country = registerValues['Country']
+            let address = {}
+            try {
+                const response = await fetch(`http://localhost:3001/newAddress/${street}/${city}/${sOrP}/${country}`, {
+                    method: "POST",
+                });
+                address = await response.json();
+            } catch (err) {
+                console.error(err.message);
+            }
 
-    const handleBookClick = () => {
+            console.log("Address: ", address)
+            // Insert into Person, retrieve the new person
+            const ssn = registerValues['SSN']
+            const addressID = address.addressid
+            const firstName = registerValues['First Name']
+            const lastName = registerValues['Last Name']
+            let person = {}
+            try {
+                const response = await fetch(`http://localhost:3001/newPerson/${ssn}/${addressID}/${firstName}/${lastName}`, {
+                    method: "POST",
+                });
+                person = await response.json()
+            } catch (err) {
+                console.error(err.message);
+            }
+
+            console.log("Person: ", person)
+            // Insert into Customer, retrieve the new customer
+            const personSSN = person.ssn
+            let customer = {}
+            try {
+                const response = await fetch(`http://localhost:3001/newCustomer/${personSSN}`, {
+                    method: "POST",
+                });
+                customer = await response.json()
+            } catch (err) {
+                console.error(err.message);
+            }
+
+            console.log("Customer: ", customer)
+            const customerID = customer.customerid
+            // Insert into booking
+            try {
+                const booking = JSON.parse(window.localStorage.getItem('room'))
+                const roomNo = booking.roomno
+                const hotelID = booking.hotelid
+                const startDate = window.localStorage.getItem('startdate')
+                const endDate = window.localStorage.getItem('enddate')
+                const endPoint = `http://localhost:3001/newBooking/${customerID}/${roomNo}/${hotelID}/${startDate}/${endDate}`;
+                await fetch(endPoint, {
+                    method: "POST",
+                });
+                window.location = "/";
+                alert("Booking was successful")
+            } catch (err) {
+                console.error(err.message);
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
+      };
+    const handleBookClickRegister = () => {
         if (!(registerValues['SSN'].length === 9) || !isFinite((registerValues['SSN']))){
             setInvalidFieldRegister(true)
             console.log("FAIL LOGIN")
@@ -58,7 +125,7 @@ function RegisterForm() {
             alert("SSN is already in use")
             return
         }
-        console.log("SUCCESS LOGIN")
+        registerBooking()
     };
     const handleFieldChange = (event) => {
         const { id, value } = event.target;
@@ -76,8 +143,7 @@ function RegisterForm() {
             const hotelID = booking.hotelid
             const startDate = window.localStorage.getItem('startdate')
             const endDate = window.localStorage.getItem('enddate')
-            const endPoint = `http://localhost:3001/loginBooking/${customerID}/${roomNo}/${hotelID}/${startDate}/${endDate}`;
-            console.log(endPoint)
+            const endPoint = `http://localhost:3001/newBooking/${customerID}/${roomNo}/${hotelID}/${startDate}/${endDate}`;
             await fetch(endPoint, {
                 method: "POST",
             });
@@ -132,7 +198,7 @@ function RegisterForm() {
                             </Grid>
                     ))}
                 </Grid>
-                <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}} onClick={handleBookClick}>
+                <Button variant="contained" sx={{ ml: 1, mt: 3, mb:3}} onClick={handleBookClickRegister}>
                     Book
                 </Button>
             </Box>

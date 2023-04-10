@@ -133,6 +133,7 @@ export default function ResultsGrid() {
 
     return (
         <>
+        <Box sx={{ width: '100%', mt: 15, ml:2, mr:2, maxWidth:1500}}></Box>
         {roomsByHotel.map(({ hotelname, chainname, address, contactinfo, rooms }) => (
             <Box key={hotelname+"B"} sx={{ width: '100%', mt: 10, ml:2, mr:2, maxWidth:1500}}>
                 <Typography key={hotelname+"T1"} variant="h5" component="div">

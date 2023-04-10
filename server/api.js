@@ -239,7 +239,7 @@ app.put("/bookingCancel/:employeeID/:roomNo/:hotelID", async (req, res) => {
 });
 
 // Make a booking with customer ssn
-app.post("/loginBooking/:customerID/:roomNo/:hotelID/:startDate/:endDate", async (req, res) => {
+app.post("/newBooking/:customerID/:roomNo/:hotelID/:startDate/:endDate", async (req, res) => {
   try {
     const { customerID, roomNo, hotelID, startDate, endDate } = req.params;
     console.log(req.params)
@@ -254,6 +254,60 @@ app.post("/loginBooking/:customerID/:roomNo/:hotelID/:startDate/:endDate", async
     console.error(err.message);
   }
 });
+
+// Insert into Address
+app.post("/newAddress/:street/:city/:sOrP/:country", async (req, res) => {
+  try {
+    const { street, city, sOrP, country } = req.params;
+    console.log(req.params)
+    const address = await db.one(
+      `insert into Address(street, city, stateOrProvince, country) 
+      values($1, $2, $3, $4) returning *;
+      `,
+      [street, city, sOrP, country]
+    );
+    res.json(address);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// Insert into Person
+app.post("/newPerson/:ssn/:addressID/:firstName/:lastName", async (req, res) => {
+  try {
+    const { ssn, addressID, firstName, lastName } = req.params;
+    console.log(req.params)
+    const person = await db.one(
+      `insert into Person(ssn, addressID, firstName, lastName) 
+      values($1, $2, $3, $4) returning *;
+      `,
+      [ssn, addressID, firstName, lastName]
+    );
+    res.json(person);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+
+// Insert into Customer
+app.post("/newCustomer/:ssn", async (req, res) => {
+  try {
+    const { ssn } = req.params;
+    console.log(req.params)
+    const customer = await db.one(
+      `insert into Customer(ssn, registrationDate) 
+      values($1, current_date) returning *;
+      `,
+      [ssn]
+    );
+    res.json(customer);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+
 
 // Port
 
