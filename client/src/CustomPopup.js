@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField'
 import Popup from 'reactjs-popup';
 import './CustomPopup.css';
+import Swal from 'sweetalert2';
 
 
 function RegisterForm() {
@@ -90,7 +91,11 @@ function RegisterForm() {
                     method: "POST",
                 });
                 window.location = "/";
-                alert("Booking was successful")
+                Swal.fire(
+                    'Booking was successful',
+                    'Your booking from '+startDate+' to '+endDate+' has been made, see you soon!',
+                    'success'
+                  ).then(() => {window.location = "/"})
             } catch (err) {
                 console.error(err.message);
             }
@@ -101,17 +106,22 @@ function RegisterForm() {
     const handleBookClickRegister = () => {
         if (!(registerValues['SSN'].length === 9) || !isFinite((registerValues['SSN']))){
             setInvalidFieldRegister(true)
-            console.log("FAIL LOGIN")
             return
         }
         for (let key in registerValues) {
             if (registerValues[key] === "") {
-                alert("Cannot leave values empty")
+                Swal.fire({
+                    title: '',
+                    text: 'Cannot leave fields empty',
+                    icon: 'error',
+                    timer: 1500,
+                    showConfirmButton: false,
+                })
                 return
             }
         }
         if (SSNs.map(entry => entry.ssn).includes(registerValues['SSN'])) {
-            alert("SSN is already in use")
+            setInvalidFieldRegister(true)
             return
         }
         registerBooking()
@@ -128,6 +138,7 @@ function RegisterForm() {
         try {
             const customerID = SSNs.find(entry => entry.ssn === loginValues['SSNLogin']).customerid;
             const booking = JSON.parse(window.localStorage.getItem('room'))
+            const hotelName = booking.hotelname
             const roomNo = booking.roomno
             const hotelID = booking.hotelid
             const startDate = window.localStorage.getItem('startdate')
@@ -136,8 +147,11 @@ function RegisterForm() {
             await fetch(endPoint, {
                 method: "POST",
             });
-            window.location = "/";
-            alert("Booking was successful")
+            Swal.fire(
+                'Booking was successful',
+                'Room '+roomNo+' at '+hotelName+' from '+startDate+' to '+endDate+' has been booked. See you soon!',
+                'success'
+              ).then(() => {window.location = "/"})
         } catch (err) {
             console.error(err.message);
         }
@@ -145,12 +159,17 @@ function RegisterForm() {
     const handleBookClickLogin = () => {
         if (!(loginValues['SSNLogin'].length === 9) || !isFinite((loginValues['SSNLogin']))){
             setInvalidFieldLogin(true)
-            console.log("FAIL LOGIN")
             return
         }
         if (!(SSNs.map(entry => entry.ssn).includes(loginValues['SSNLogin']))) {
-            alert("Cannot find an account with that ssn")
-            return
+            Swal.fire({
+                title: '',
+                text: 'Cannot find an account with that SSN',
+                icon: 'error',
+                timer: 1500,
+                showConfirmButton: false,
+            })
+              return
         }
         loginBooking()
     };
@@ -178,7 +197,7 @@ function RegisterForm() {
                                         autoComplete="off">
                                         <TextField 
                                             error={field.localeCompare("SSN") === 0 ? invalidFieldRegister : false}
-                                            helperText={invalidFieldRegister && field.localeCompare("SSN") === 0 ? 'Invalid SSN' : ''}
+                                            helperText={invalidFieldRegister && field.localeCompare("SSN") === 0 ? 'SSN is invalid or already in use' : ''}
                                             id={field} label={field} variant="outlined" 
                                             value={registerValues[field]} onChange={handleFieldChange}
                                         />
@@ -223,11 +242,23 @@ export default function CustomPopup({ room }) {
         const start = window.localStorage.getItem('startdate')
         const end = window.localStorage.getItem('enddate')
         if (start === '1969-12-31' || end === '1969-12-31'){
-            alert("Please set a start and end date for your booking")
+            Swal.fire({
+                title: '',
+                text: 'Please set the dates for your booking',
+                icon: 'warning',
+                timer: 1500,
+                showConfirmButton: false,
+            })
             return
         }
         else if (Math.ceil((new Date(end)-new Date(start)) / (1000 * 60 * 60 * 24)) > 30){
-            alert("Cannot make booking for more than 30 days")
+            Swal.fire({
+                title: '',
+                text: 'Booking cannot be longer than 30 days',
+                icon: 'warning',
+                timer: 1500,
+                showConfirmButton: false,
+            })
             return
         }
         setOpen(o => !o)

@@ -15,6 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import HomeImage from "./HomeImage";
 import SearchBox from "./SearchBox";
 
+
 function NoRoomsSnackbar({text}) {
     const [open, setOpen] = React.useState(true);
   
@@ -53,7 +54,6 @@ function NoRoomsSnackbar({text}) {
   }
 
 export default function ResultsGrid() {
-
     const [rooms, setRooms] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -80,7 +80,6 @@ export default function ResultsGrid() {
             '1969-12-31' ? null : window.localStorage.getItem('startdate');
         const endDate = window.localStorage.getItem('enddate') === 
             '1969-12-31' ? null : window.localStorage.getItem('enddate');
-        console.log(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate)
         getRooms(hotelChain, country, hotelSize, rating, roomCapacity, pricePerDay, startDate, endDate);
     };
 
@@ -140,7 +139,6 @@ export default function ResultsGrid() {
     if(isLoading) return <NoRoomsSnackbar text = "Loading..."></NoRoomsSnackbar>
     if(roomsByHotel.length === 0) return <NoRoomsSnackbar text = "No rooms found"></NoRoomsSnackbar>
 
-    
     return (
         <>
         <div className="container">
@@ -148,7 +146,7 @@ export default function ResultsGrid() {
                 <HomeImage />
             </div>
             <div className="search-box">
-                <SearchBox refresh={refreshResults}/>
+                <SearchBox id={refresh} refresh={refreshResults}/>
             </div>
         </div>
         <Box sx={{ width: '100%', mt: 15, ml:2, mr:2, maxWidth:1500}}></Box>
@@ -202,7 +200,7 @@ export default function ResultsGrid() {
         ))}
         <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
           {rooms.length === 50 && <Typography color='grey' variant="body1">--- Showing the first 50 rooms ---</Typography>}
-          {rooms.length !== 50 && <Typography color='grey' variant="body1">--- Showing all available rooms ---</Typography>}
+          {rooms.length < 50 && <Typography color='grey' variant="body1">--- Showing all available rooms ---</Typography>}
         </div>        
         </>
     );
