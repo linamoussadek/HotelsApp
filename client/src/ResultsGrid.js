@@ -92,7 +92,6 @@ export default function ResultsGrid() {
     const refreshResults = () => {
       updateRooms()
       setRefresh(r => !r);
-      console.log(rooms)
     }
     
 
@@ -135,9 +134,7 @@ export default function ResultsGrid() {
         contactinfo,
         rooms
     }));
-    // console.log(roomsByHotel)
     if(isLoading) return <NoRoomsSnackbar text = "Loading..."></NoRoomsSnackbar>
-    if(roomsByHotel.length === 0) return <NoRoomsSnackbar text = "No rooms found"></NoRoomsSnackbar>
 
     return (
         <>
@@ -199,8 +196,9 @@ export default function ResultsGrid() {
             </Box>
         ))}
         <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-          {rooms.length === 50 && <Typography color='grey' variant="body1">--- Showing the first 50 rooms ---</Typography>}
-          {rooms.length < 50 && <Typography color='grey' variant="body1">--- Showing all available rooms ---</Typography>}
+          {rooms.length === 50 && <Typography color='grey' variant="body1" sx={{mt: 5, mb: 10}}>--- Showing the first 50 rooms ---</Typography>}
+          {rooms.length < 50 && rooms.length > 0 && <Typography color='grey' variant="body1" sx={{mt: 5, mb: 10}}>--- Showing all available rooms ---</Typography>}
+          {rooms.length === 0 && <Typography color='grey' variant="body1" sx={{mt: 10, mb: 10}}>--- No rooms with that criteria ---</Typography>}
         </div>        
         </>
     );

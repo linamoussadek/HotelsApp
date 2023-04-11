@@ -287,11 +287,11 @@ function BasicSelectHotelSize() {
 
 function InputSlider() {
     const [pricePerDay, setPricePerDay] = React.useState(300);
-    window.localStorage.setItem('priceperday', 300);
 
     const handleSliderChange = (event, newValue) => {
         setPricePerDay(newValue);
         window.localStorage.setItem('priceperday', event.target.value);
+        console.log(window.localStorage.getItem('priceperday'))
     };
 
     const handleInputChange = (event) => {
