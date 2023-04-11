@@ -13,7 +13,7 @@ In the command line for the project:
     2. Install dependencies: `npm install`
     3. Start the server: `npm run dev` or `npm start` ~ dev provides live updates with nodemon
 
-3. Set up the client application
+3. Set up the client application:
     1. Create a new terminal window
     2. Navigate to the client folder: `cd client`
     3. Install dependencies: `npm install`
