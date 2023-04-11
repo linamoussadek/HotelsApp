@@ -271,8 +271,10 @@ export default function CustomPopup({ room }) {
             </Button>
             <Popup
                 className="popup"
-                open={open}
                 modal
+                nested
+                open={open}
+                onClose={closeModal}
             >
                 <div className="modal">
                     <button className="close" onClick={closeModal}>
